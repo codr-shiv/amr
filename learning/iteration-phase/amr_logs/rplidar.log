@@ -1,0 +1,11 @@
+[INFO] [launch]: All log files can be found below /home/amr/.ros/log/2026-09-28-02-23-18-547331-amr-1790
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [rplidar_node-1]: process started with pid [1793]
+[rplidar_node-1] [INFO] [1790542398.993703697] [rplidar_node]: RPLidar running on ROS2 package rplidar_ros. RPLIDAR SDK Version:2.1.0
+[rplidar_node-1] [INFO] [1790542399.022182654] [rplidar_node]: RPLidar S/N: 7CB1FA86C2E392D1A5E59FF5EB655C63
+[rplidar_node-1] [INFO] [1790542399.022438763] [rplidar_node]: Firmware Ver: 1.29
+[rplidar_node-1] [INFO] [1790542399.022512466] [rplidar_node]: Hardware Rev: 7
+[rplidar_node-1] [INFO] [1790542399.025248261] [rplidar_node]: RPLidar health status : 0
+[rplidar_node-1] [INFO] [1790542399.025425093] [rplidar_node]: RPLidar health status : OK.
+[rplidar_node-1] [INFO] [1790542399.031121903] [rplidar_node]: Start
+[rplidar_node-1] [INFO] [1790542399.276304708] [rplidar_node]: current scan mode: Sensitivity, sample rate: 8 Khz, max_distance: 12.0 m, scan frequency:10.0 Hz, 

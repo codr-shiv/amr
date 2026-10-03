@@ -1,0 +1,9 @@
+<library path="my_amr_control_pkg">
+  <class name="my_amr_control_pkg/MyAMRHardwareInterface"
+         type="my_amr_control_pkg::MyAMRHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ROS 2 Control Hardware Interface for Differential Drive AMR.
+    </description>
+  </class>
+</library>

@@ -1,0 +1,97 @@
+# =============================================================================
+#  Alternative SLAM Toolbox config (the old amr_slam package's mapper_params_real.yaml).
+#  Not used by amr_bringup.sh (that uses slam_toolbox_params.yaml). Run it with:
+#    ros2 launch amr_navigation slam.launch.py \
+#      slam_params_file:=$(ros2 pkg prefix amr_navigation)/share/amr_navigation/config/mapper_params_real.yaml
+#  Differences vs slam_toolbox_params.yaml: minimum_travel_distance/heading 0.05 (vs 0.3),
+#  default transform_timeout (0.2). NOTE: minimum_laser_range / maximum_laser_range below are
+#  not slam_toolbox parameter names and are ignored (slam_toolbox uses max_laser_range).
+# =============================================================================
+slam_toolbox:
+  ros__parameters:
+
+    # =========================
+    # TF FRAMES
+    # =========================
+
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+
+    # =========================
+    # LASER
+    # =========================
+
+    scan_topic: /scan
+
+    # =========================
+    # SLAM MODE
+    # =========================
+
+    mode: mapping
+
+    # =========================
+    # SOLVER
+    # =========================
+
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_loss_function: None
+
+    # =========================
+    # TIMING
+    # =========================
+
+    transform_publish_period: 0.02
+    map_update_interval: 5.0
+    minimum_time_interval: 0.5
+
+    # =========================
+    # LASER RANGE
+    # =========================
+
+    minimum_laser_range: 0.15
+    maximum_laser_range: 12.0
+
+    # =========================
+    # MOTION
+    # =========================
+
+    minimum_travel_distance: 0.05
+    minimum_travel_heading: 0.05
+
+    # =========================
+    # SCAN MATCHING
+    # =========================
+
+    use_scan_matching: true
+    use_scan_barycenter: true
+
+    # =========================
+    # CORRELATION SEARCH
+    # =========================
+
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+
+    # =========================
+    # LOOP CLOSING
+    # =========================
+
+    do_loop_closing: true
+    loop_search_maximum_distance: 3.0
+
+    # =========================
+    # MAP
+    # =========================
+
+    resolution: 0.05
+
+    # =========================
+    # DEBUG
+    # =========================
+
+    debug_logging: false

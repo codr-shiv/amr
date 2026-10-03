@@ -1,0 +1,532 @@
+[INFO] [launch]: All log files can be found below /home/amr/.ros/log/2026-09-28-02-23-10-125089-amr-1748
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [diff_drive_controller-1]: process started with pid [1764]
+[diff_drive_controller-1] [INFO] [1790542392.769526200] [diff_drive_controller]: diff_drive_controller up: r=0.056 m, L=0.39 m, max_wheel_speed=18.0 rad/s, rate=50.0 Hz, odom->base_link, cmd="/cmd_vel", encoders="/encoder_telemetry", use_encoder_stamp=True
+[diff_drive_controller-1] [INFO] [1790542393.004895485] [diff_drive_controller]: First encoder sample: left=170.8799 rad, right=226.1876 rad
+[diff_drive_controller-1] [WARN] [1790542397.898888482] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542402.643115581] [diff_drive_controller]: encoder latency ms: min 6.2 / mean 18.4 / max 85.1, stamps rejected 0/145
+[diff_drive_controller-1] [INFO] [1790542412.640850546] [diff_drive_controller]: encoder latency ms: min 6.6 / mean 18.0 / max 28.0, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790542422.639689071] [diff_drive_controller]: encoder latency ms: min 7.5 / mean 17.9 / max 28.1, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790542432.646083720] [diff_drive_controller]: encoder latency ms: min 8.0 / mean 17.8 / max 27.4, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790542442.642018506] [diff_drive_controller]: encoder latency ms: min 5.0 / mean 19.0 / max 47.7, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790542452.639559699] [diff_drive_controller]: encoder latency ms: min 7.1 / mean 21.6 / max 104.2, stamps rejected 0/168
+[diff_drive_controller-1] [WARN] [1790542462.262537624] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542462.645880811] [diff_drive_controller]: encoder latency ms: min 8.4 / mean 41.3 / max 196.4, stamps rejected 0/131
+[diff_drive_controller-1] [WARN] [1790542464.279397248] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542466.282020939] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542468.299327896] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542470.343883495] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542472.640118877] [diff_drive_controller]: encoder latency ms: min 65.5 / mean 110.5 / max 199.4, stamps rejected 0/14
+[diff_drive_controller-1] [WARN] [1790542472.801595552] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542477.111210875] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542479.119280006] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542481.119598885] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542482.643782564] [diff_drive_controller]: encoder latency ms: min 50.2 / mean 90.4 / max 118.8, stamps rejected 0/27
+[diff_drive_controller-1] [WARN] [1790542483.138805136] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542485.940038950] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542487.960572089] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542489.978176434] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542492.072115510] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542492.644332125] [diff_drive_controller]: encoder latency ms: min 17.9 / mean 81.4 / max 192.1, stamps rejected 0/26
+[diff_drive_controller-1] [WARN] [1790542496.880063753] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542498.889666142] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542500.918134792] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542502.640456708] [diff_drive_controller]: encoder latency ms: min 6.9 / mean 55.4 / max 98.3, stamps rejected 0/48
+[diff_drive_controller-1] [WARN] [1790542503.025311153] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542505.438493470] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542507.460259867] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542510.158112345] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542512.163472238] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542512.645634691] [diff_drive_controller]: encoder latency ms: min 17.8 / mean 80.5 / max 162.5, stamps rejected 0/28
+[diff_drive_controller-1] [WARN] [1790542514.178206141] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542516.180270500] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542522.642831365] [diff_drive_controller]: encoder latency ms: min 6.5 / mean 57.2 / max 223.6, stamps rejected 0/82
+[diff_drive_controller-1] [WARN] [1790542530.000235141] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542532.119122102] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542532.647160682] [diff_drive_controller]: encoder latency ms: min 10.1 / mean 52.1 / max 126.5, stamps rejected 0/98
+[diff_drive_controller-1] [WARN] [1790542534.119935592] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542536.134568662] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542542.640083613] [diff_drive_controller]: encoder latency ms: min 14.4 / mean 54.4 / max 169.9, stamps rejected 0/69
+[diff_drive_controller-1] [WARN] [1790542543.921535962] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542545.938993617] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542548.073648038] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542550.110006026] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542552.123771928] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542552.649732685] [diff_drive_controller]: encoder latency ms: min 69.0 / mean 102.2 / max 163.8, stamps rejected 0/22
+[diff_drive_controller-1] [WARN] [1790542554.144578027] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542556.170908163] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542558.345750728] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542562.040745953] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542562.649086094] [diff_drive_controller]: encoder latency ms: min 24.0 / mean 88.3 / max 171.1, stamps rejected 0/26
+[diff_drive_controller-1] [WARN] [1790542567.640782470] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542569.880949851] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542571.900041998] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542572.640753299] [diff_drive_controller]: encoder latency ms: min 39.5 / mean 98.9 / max 210.6, stamps rejected 0/64
+[diff_drive_controller-1] [WARN] [1790542575.162233689] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542577.180888250] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542579.187554751] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542581.207179278] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542582.690689346] [diff_drive_controller]: encoder latency ms: min 66.0 / mean 93.1 / max 129.3, stamps rejected 0/10
+[diff_drive_controller-1] [WARN] [1790542583.238793937] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542587.065087082] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542589.078822780] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542592.644744994] [diff_drive_controller]: encoder latency ms: min 45.7 / mean 98.5 / max 203.3, stamps rejected 0/16
+[diff_drive_controller-1] [WARN] [1790542593.981509660] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542595.998642950] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542598.000012226] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542600.018611806] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542602.643019909] [diff_drive_controller]: encoder latency ms: min 21.9 / mean 90.6 / max 133.2, stamps rejected 0/20
+[diff_drive_controller-1] [WARN] [1790542602.902389287] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542604.919623963] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542606.920883011] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542609.680815924] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542612.644632350] [diff_drive_controller]: encoder latency ms: min 10.9 / mean 51.9 / max 170.5, stamps rejected 0/30
+[diff_drive_controller-1] [WARN] [1790542613.021750113] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542621.420486118] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542622.644453175] [diff_drive_controller]: encoder latency ms: min 7.7 / mean 38.0 / max 358.6, stamps rejected 0/126
+[diff_drive_controller-1] [INFO] [1790542632.645090160] [diff_drive_controller]: encoder latency ms: min 6.7 / mean 26.9 / max 208.5, stamps rejected 0/151
+[diff_drive_controller-1] [INFO] [1790542642.641969542] [diff_drive_controller]: encoder latency ms: min 6.7 / mean 23.6 / max 40.1, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790542652.645206212] [diff_drive_controller]: encoder latency ms: min 6.6 / mean 26.5 / max 100.8, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790542662.644918592] [diff_drive_controller]: encoder latency ms: min 6.2 / mean 24.3 / max 40.5, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790542672.642695197] [diff_drive_controller]: encoder latency ms: min 6.7 / mean 24.0 / max 38.2, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790542682.645189483] [diff_drive_controller]: encoder latency ms: min 5.1 / mean 23.4 / max 33.1, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790542692.646624433] [diff_drive_controller]: encoder latency ms: min 5.0 / mean 22.2 / max 43.3, stamps rejected 0/168
+[diff_drive_controller-1] [WARN] [1790542698.752270556] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542702.642974218] [diff_drive_controller]: encoder latency ms: min 4.7 / mean 23.6 / max 90.2, stamps rejected 0/139
+[diff_drive_controller-1] [INFO] [1790542712.643506367] [diff_drive_controller]: encoder latency ms: min 4.3 / mean 21.2 / max 39.6, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790542722.645460290] [diff_drive_controller]: encoder latency ms: min 4.1 / mean 21.7 / max 32.2, stamps rejected 0/168
+[diff_drive_controller-1] [INFO] [1790542732.644641400] [diff_drive_controller]: encoder latency ms: min 4.1 / mean 25.5 / max 177.7, stamps rejected 0/162
+[diff_drive_controller-1] [INFO] [1790542742.643649111] [diff_drive_controller]: encoder latency ms: min 4.7 / mean 19.7 / max 43.3, stamps rejected 0/166
+[diff_drive_controller-1] [INFO] [1790542752.644014068] [diff_drive_controller]: encoder latency ms: min 4.6 / mean 18.5 / max 63.8, stamps rejected 0/165
+[diff_drive_controller-1] [INFO] [1790542762.642987260] [diff_drive_controller]: encoder latency ms: min 4.4 / mean 17.9 / max 126.7, stamps rejected 0/161
+[diff_drive_controller-1] [WARN] [1790542772.084549422] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542772.646731778] [diff_drive_controller]: encoder latency ms: min 4.0 / mean 15.1 / max 83.5, stamps rejected 0/142
+[diff_drive_controller-1] [WARN] [1790542774.100181056] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542776.100372128] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542782.642920107] [diff_drive_controller]: encoder latency ms: min 16.6 / mean 26.7 / max 100.5, stamps rejected 0/97
+[diff_drive_controller-1] [INFO] [1790542792.642078483] [diff_drive_controller]: encoder latency ms: min 16.4 / mean 20.8 / max 53.8, stamps rejected 0/166
+[diff_drive_controller-1] [INFO] [1790542802.642621915] [diff_drive_controller]: encoder latency ms: min 16.3 / mean 19.7 / max 45.5, stamps rejected 0/159
+[diff_drive_controller-1] [INFO] [1790542812.644348781] [diff_drive_controller]: encoder latency ms: min 15.9 / mean 21.7 / max 208.0, stamps rejected 0/166
+[diff_drive_controller-1] [INFO] [1790542822.644513456] [diff_drive_controller]: encoder latency ms: min 15.6 / mean 19.9 / max 55.8, stamps rejected 0/166
+[diff_drive_controller-1] [WARN] [1790542828.500367796] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542830.501041144] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542832.504003807] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542832.657629450] [diff_drive_controller]: encoder latency ms: min 16.1 / mean 65.2 / max 123.2, stamps rejected 0/69
+[diff_drive_controller-1] [WARN] [1790542834.523219966] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542836.542229496] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542838.999914843] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542841.020574026] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542842.642273271] [diff_drive_controller]: encoder latency ms: min 34.8 / mean 66.0 / max 121.9, stamps rejected 0/13
+[diff_drive_controller-1] [WARN] [1790542843.261921320] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542845.278783812] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542847.304045255] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542849.331848713] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542851.339073729] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542852.735825808] [diff_drive_controller]: encoder latency ms: min 41.8 / mean 88.3 / max 122.8, stamps rejected 0/13
+[diff_drive_controller-1] [WARN] [1790542853.362026968] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542856.379225154] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542858.381345787] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542860.398343130] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542862.412711927] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542862.662102273] [diff_drive_controller]: encoder latency ms: min 36.0 / mean 136.9 / max 341.4, stamps rejected 0/20
+[diff_drive_controller-1] [WARN] [1790542864.421248939] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542872.643129142] [diff_drive_controller]: encoder latency ms: min 63.0 / mean 67.4 / max 88.3, stamps rejected 0/109
+[diff_drive_controller-1] [INFO] [1790542882.647850823] [diff_drive_controller]: encoder latency ms: min 62.9 / mean 67.6 / max 110.9, stamps rejected 0/166
+[diff_drive_controller-1] [WARN] [1790542886.879126049] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542888.900111129] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542890.932251287] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542892.644328106] [diff_drive_controller]: encoder latency ms: min 64.6 / mean 118.2 / max 226.2, stamps rejected 0/43
+[diff_drive_controller-1] [WARN] [1790542892.942345602] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542894.998269274] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542897.002112676] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542902.690682770] [diff_drive_controller]: encoder latency ms: min 5.2 / mean 31.4 / max 196.8, stamps rejected 0/79
+[diff_drive_controller-1] [INFO] [1790542912.640933700] [diff_drive_controller]: encoder latency ms: min 6.2 / mean 27.4 / max 235.3, stamps rejected 0/158
+[diff_drive_controller-1] [WARN] [1790542912.959560235] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542916.061309962] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542919.303276145] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542921.319660558] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542922.645016867] [diff_drive_controller]: encoder latency ms: min 47.0 / mean 88.5 / max 152.8, stamps rejected 0/32
+[diff_drive_controller-1] [WARN] [1790542923.999523869] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542928.200305018] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542930.201467064] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542932.212663556] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542932.645828366] [diff_drive_controller]: encoder latency ms: min 48.8 / mean 101.0 / max 145.6, stamps rejected 0/21
+[diff_drive_controller-1] [WARN] [1790542934.214641891] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542936.224054155] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542938.241864526] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542940.242365520] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542942.247811628] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542947.020455118] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542949.038545228] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542951.054180466] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542952.641005732] [diff_drive_controller]: encoder latency ms: min 7.9 / mean 67.4 / max 246.5, stamps rejected 0/50
+[diff_drive_controller-1] [WARN] [1790542955.179575843] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542958.779185294] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542960.780056915] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542962.644143459] [diff_drive_controller]: encoder latency ms: min 51.9 / mean 118.2 / max 196.8, stamps rejected 0/52
+[diff_drive_controller-1] [WARN] [1790542962.798993852] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542964.800108027] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542966.820297603] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542968.859150508] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542972.020251780] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542972.646592691] [diff_drive_controller]: encoder latency ms: min 35.2 / mean 85.1 / max 194.6, stamps rejected 0/35
+[diff_drive_controller-1] [WARN] [1790542974.020690200] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542976.042181674] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542978.051556735] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542980.058133649] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542982.641786085] [diff_drive_controller]: encoder latency ms: min 8.4 / mean 17.5 / max 50.0, stamps rejected 0/32
+[diff_drive_controller-1] [WARN] [1790542987.219398693] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542989.241663568] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542991.255840886] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790542992.677438619] [diff_drive_controller]: encoder latency ms: min 7.0 / mean 59.3 / max 247.5, stamps rejected 0/69
+[diff_drive_controller-1] [WARN] [1790542993.982856777] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542996.007318500] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790542998.030216624] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543000.041134187] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543002.061302460] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543002.643542453] [diff_drive_controller]: encoder latency ms: min 50.8 / mean 115.0 / max 276.4, stamps rejected 0/41
+[diff_drive_controller-1] [WARN] [1790543005.080121454] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543012.643563744] [diff_drive_controller]: encoder latency ms: min 50.7 / mean 56.8 / max 144.1, stamps rejected 0/147
+[diff_drive_controller-1] [INFO] [1790543022.644147381] [diff_drive_controller]: encoder latency ms: min 49.9 / mean 54.5 / max 71.6, stamps rejected 0/164
+[diff_drive_controller-1] [INFO] [1790543032.642237649] [diff_drive_controller]: encoder latency ms: min 50.3 / mean 54.4 / max 71.1, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790543042.643696539] [diff_drive_controller]: encoder latency ms: min 50.6 / mean 54.0 / max 73.8, stamps rejected 0/166
+[diff_drive_controller-1] [INFO] [1790543052.642931724] [diff_drive_controller]: encoder latency ms: min 49.9 / mean 54.0 / max 83.4, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790543062.642315936] [diff_drive_controller]: encoder latency ms: min 9.7 / mean 38.9 / max 242.6, stamps rejected 0/158
+[diff_drive_controller-1] [WARN] [1790543070.679562719] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543072.645033358] [diff_drive_controller]: encoder latency ms: min 7.8 / mean 25.3 / max 135.0, stamps rejected 0/113
+[diff_drive_controller-1] [WARN] [1790543072.699444600] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543075.078435559] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543077.078951047] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543079.103052101] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543082.641417699] [diff_drive_controller]: encoder latency ms: min 24.7 / mean 78.9 / max 154.2, stamps rejected 0/32
+[diff_drive_controller-1] [WARN] [1790543084.040627381] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543088.140930450] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543090.160174539] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543092.179562794] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543092.666441733] [diff_drive_controller]: encoder latency ms: min 24.5 / mean 88.7 / max 139.6, stamps rejected 0/26
+[diff_drive_controller-1] [WARN] [1790543094.179974431] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543097.942084007] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543101.041236570] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543102.644608320] [diff_drive_controller]: encoder latency ms: min 18.3 / mean 69.1 / max 114.3, stamps rejected 0/37
+[diff_drive_controller-1] [WARN] [1790543103.059790683] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543105.079411548] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543107.128410655] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543109.129478825] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543111.347457393] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543112.644757596] [diff_drive_controller]: encoder latency ms: min 54.7 / mean 115.1 / max 220.9, stamps rejected 0/17
+[diff_drive_controller-1] [WARN] [1790543113.358836560] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543115.918715650] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543117.935856347] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543119.949119592] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543122.644408896] [diff_drive_controller]: encoder latency ms: min 62.8 / mean 95.0 / max 161.8, stamps rejected 0/13
+[diff_drive_controller-1] [WARN] [1790543126.260373228] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543128.278296305] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543132.141627431] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543132.646686738] [diff_drive_controller]: encoder latency ms: min 45.1 / mean 93.3 / max 137.7, stamps rejected 0/58
+[diff_drive_controller-1] [WARN] [1790543134.161230051] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543136.181583851] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543138.203335252] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543140.219411602] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543142.240080992] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543142.643360195] [diff_drive_controller]: encoder latency ms: min 101.5 / mean 128.9 / max 174.0, stamps rejected 0/5
+[diff_drive_controller-1] [WARN] [1790543146.019463642] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543148.044524426] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543150.065355111] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543152.643013630] [diff_drive_controller]: encoder latency ms: min 124.5 / mean 173.8 / max 272.0, stamps rejected 0/31
+[diff_drive_controller-1] [WARN] [1790543152.841475745] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543154.858136739] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543156.859042238] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543159.843724135] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543161.859844781] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543162.646088003] [diff_drive_controller]: encoder latency ms: min 65.0 / mean 134.6 / max 193.4, stamps rejected 0/18
+[diff_drive_controller-1] [WARN] [1790543163.862152658] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543165.878789300] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543167.919846818] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543169.944873140] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543171.959157021] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543173.976775248] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543178.502644338] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543180.519725421] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543182.522139687] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543182.671926160] [diff_drive_controller]: encoder latency ms: min 75.9 / mean 166.5 / max 267.5, stamps rejected 0/27
+[diff_drive_controller-1] [WARN] [1790543185.179854152] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543187.180679174] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543189.182617521] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543191.915986665] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543192.644987480] [diff_drive_controller]: encoder latency ms: min 23.1 / mean 99.5 / max 162.8, stamps rejected 0/14
+[diff_drive_controller-1] [WARN] [1790543194.619780493] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543196.640079036] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543198.659664899] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543202.001120335] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543202.641699830] [diff_drive_controller]: encoder latency ms: min 10.0 / mean 74.7 / max 123.2, stamps rejected 0/35
+[diff_drive_controller-1] [WARN] [1790543204.020309016] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543206.040974853] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543208.041776430] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543210.069353586] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543212.079557574] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543212.642902071] [diff_drive_controller]: encoder latency ms: min 51.0 / mean 79.4 / max 114.8, stamps rejected 0/5
+[diff_drive_controller-1] [WARN] [1790543214.102131675] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543216.118031121] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543218.120465186] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543220.145699988] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543222.159256841] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543222.644510569] [diff_drive_controller]: encoder latency ms: min 98.5 / mean 173.9 / max 266.9, stamps rejected 0/12
+[diff_drive_controller-1] [WARN] [1790543224.160605507] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543226.163798993] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543228.181374334] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543230.930921783] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543232.642240726] [diff_drive_controller]: encoder latency ms: min 71.9 / mean 112.6 / max 247.7, stamps rejected 0/17
+[diff_drive_controller-1] [WARN] [1790543233.961667780] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543238.239992276] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543240.258858460] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543242.324088241] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543242.655092103] [diff_drive_controller]: encoder latency ms: min 55.7 / mean 91.2 / max 133.1, stamps rejected 0/33
+[diff_drive_controller-1] [WARN] [1790543246.179925411] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543249.259190768] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543251.280231120] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543252.641718176] [diff_drive_controller]: encoder latency ms: min 27.5 / mean 100.0 / max 225.3, stamps rejected 0/39
+[diff_drive_controller-1] [WARN] [1790543253.301132177] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543255.318652685] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543257.341523394] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543260.759056226] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543262.693069154] [diff_drive_controller]: encoder latency ms: min 31.8 / mean 92.6 / max 150.7, stamps rejected 0/14
+[diff_drive_controller-1] [WARN] [1790543262.784677655] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543267.141726619] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543271.761430213] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543272.647571763] [diff_drive_controller]: encoder latency ms: min 90.1 / mean 170.5 / max 362.7, stamps rejected 0/37
+[diff_drive_controller-1] [WARN] [1790543273.781958903] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543275.786838320] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543277.816483979] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543279.839653908] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543281.850664927] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543283.877860141] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543287.479534116] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543289.489916270] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543291.501976745] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543292.642508839] [diff_drive_controller]: encoder latency ms: min 59.2 / mean 112.9 / max 171.1, stamps rejected 0/19
+[diff_drive_controller-1] [WARN] [1790543293.519899157] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543295.546757429] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543297.548866701] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543299.740331799] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543301.740348271] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543302.642215944] [diff_drive_controller]: encoder latency ms: min 81.5 / mean 136.6 / max 187.4, stamps rejected 0/12
+[diff_drive_controller-1] [WARN] [1790543304.518777245] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543306.525282465] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543308.538675615] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543311.060747171] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543312.644707620] [diff_drive_controller]: encoder latency ms: min 69.3 / mean 139.7 / max 237.6, stamps rejected 0/31
+[diff_drive_controller-1] [WARN] [1790543313.080755623] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543315.082545990] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543317.106727591] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543319.109448760] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543321.143141333] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543322.642832750] [diff_drive_controller]: encoder latency ms: min 166.0 / mean 180.8 / max 202.8, stamps rejected 0/6
+[diff_drive_controller-1] [WARN] [1790543323.159986844] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543327.181810895] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543329.218817833] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543331.241344210] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543332.668480447] [diff_drive_controller]: encoder latency ms: min 95.5 / mean 144.0 / max 236.2, stamps rejected 0/24
+[diff_drive_controller-1] [WARN] [1790543333.244285617] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543335.245627370] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543337.248361852] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543339.269659256] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543341.293603567] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543342.642374260] [diff_drive_controller]: encoder latency ms: min 92.5 / mean 152.6 / max 207.1, stamps rejected 0/4
+[diff_drive_controller-1] [WARN] [1790543345.959545165] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543348.158804838] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543350.159725982] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543352.159895224] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543352.641078930] [diff_drive_controller]: encoder latency ms: min 87.7 / mean 184.1 / max 258.6, stamps rejected 0/20
+[diff_drive_controller-1] [WARN] [1790543354.178493351] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543356.179252960] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543358.186099413] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543360.202967016] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543362.641359960] [diff_drive_controller]: encoder latency ms: min 115.0 / mean 155.3 / max 195.7, stamps rejected 0/16
+[diff_drive_controller-1] [WARN] [1790543363.879997171] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543366.318379429] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543368.319013557] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543370.321232877] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543372.323547770] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543372.727950291] [diff_drive_controller]: encoder latency ms: min 127.2 / mean 153.0 / max 177.1, stamps rejected 0/16
+[diff_drive_controller-1] [WARN] [1790543374.439995542] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543376.458493188] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543379.841530580] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543381.847311782] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543382.648382286] [diff_drive_controller]: encoder latency ms: min 90.8 / mean 156.2 / max 238.4, stamps rejected 0/48
+[diff_drive_controller-1] [WARN] [1790543383.858346168] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543389.882115781] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543391.900352467] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543392.644056812] [diff_drive_controller]: encoder latency ms: min 99.6 / mean 148.5 / max 200.7, stamps rejected 0/28
+[diff_drive_controller-1] [WARN] [1790543393.900979909] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543395.922654885] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543397.923148402] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543399.935282002] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543401.960023067] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543402.646606010] [diff_drive_controller]: encoder latency ms: min 126.9 / mean 171.2 / max 209.5, stamps rejected 0/5
+[diff_drive_controller-1] [WARN] [1790543403.979538780] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543405.986453955] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543408.030810099] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543410.039143894] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543412.039632393] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543412.644151226] [diff_drive_controller]: encoder latency ms: min 106.5 / mean 108.0 / max 109.4, stamps rejected 0/3
+[diff_drive_controller-1] [WARN] [1790543415.261112397] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543417.278806401] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543419.286958086] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543421.299765940] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543422.763668541] [diff_drive_controller]: encoder latency ms: min 109.5 / mean 171.7 / max 223.5, stamps rejected 0/13
+[diff_drive_controller-1] [WARN] [1790543423.440078928] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543425.439436454] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543427.439920657] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543429.464785794] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543431.465435662] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543432.659207068] [diff_drive_controller]: encoder latency ms: min 122.6 / mean 150.4 / max 211.9, stamps rejected 0/4
+[diff_drive_controller-1] [WARN] [1790543433.478901790] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543435.503053618] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543437.519706333] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543439.574236849] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543441.617430373] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543442.642296944] [diff_drive_controller]: encoder latency ms: min 96.0 / mean 103.5 / max 116.9, stamps rejected 0/3
+[diff_drive_controller-1] [WARN] [1790543443.617872576] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543445.634117624] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543447.641648516] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543451.701783009] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543452.642574365] [diff_drive_controller]: encoder latency ms: min 57.2 / mean 130.0 / max 171.4, stamps rejected 0/20
+[diff_drive_controller-1] [WARN] [1790543453.718861563] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543455.725942069] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543457.741240964] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543459.750149832] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543461.759948270] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543462.641550611] [diff_drive_controller]: encoder latency ms: min 154.9 / mean 225.0 / max 252.6, stamps rejected 0/6
+[diff_drive_controller-1] [WARN] [1790543463.778629725] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543465.781799859] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543467.842229072] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543469.843393938] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543471.852285509] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543472.644189471] [diff_drive_controller]: encoder latency ms: min 214.1 / mean 214.1 / max 214.1, stamps rejected 0/1
+[diff_drive_controller-1] [WARN] [1790543475.059611385] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543477.079226501] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543479.081606547] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543481.104020429] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543482.644792229] [diff_drive_controller]: encoder latency ms: min 69.2 / mean 138.3 / max 272.9, stamps rejected 0/23
+[diff_drive_controller-1] [WARN] [1790543483.119023344] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543485.123811730] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543489.918742716] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543492.158441911] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543492.645886929] [diff_drive_controller]: encoder latency ms: min 68.7 / mean 132.7 / max 207.9, stamps rejected 0/43
+[diff_drive_controller-1] [WARN] [1790543494.160174311] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543501.879270893] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543502.644806306] [diff_drive_controller]: encoder latency ms: min 19.5 / mean 58.3 / max 274.7, stamps rejected 0/82
+[diff_drive_controller-1] [WARN] [1790543505.061504714] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543507.318991236] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543509.338976481] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543512.642658576] [diff_drive_controller]: encoder latency ms: min 25.2 / mean 96.4 / max 178.4, stamps rejected 0/26
+[diff_drive_controller-1] [WARN] [1790543513.982284622] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543516.004358302] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543520.919933975] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543522.643308704] [diff_drive_controller]: encoder latency ms: min 49.3 / mean 105.8 / max 306.2, stamps rejected 0/51
+[diff_drive_controller-1] [WARN] [1790543522.938910483] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543524.963697188] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543528.819939957] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543530.840083386] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543532.669822403] [diff_drive_controller]: encoder latency ms: min 109.4 / mean 154.3 / max 305.5, stamps rejected 0/17
+[diff_drive_controller-1] [WARN] [1790543532.872197373] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543534.881495221] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543537.500513396] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543539.519125777] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543542.199011830] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543542.646650007] [diff_drive_controller]: encoder latency ms: min 70.2 / mean 174.8 / max 305.3, stamps rejected 0/18
+[diff_drive_controller-1] [WARN] [1790543544.224236755] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543546.239866297] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543549.139538206] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543551.142600878] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543552.790488276] [diff_drive_controller]: encoder latency ms: min 172.2 / mean 241.7 / max 359.9, stamps rejected 0/7
+[diff_drive_controller-1] [WARN] [1790543553.143310597] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543555.157957606] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543557.256799741] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543559.356471558] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543562.641648291] [diff_drive_controller]: encoder latency ms: min 17.9 / mean 44.1 / max 106.6, stamps rejected 0/10
+[diff_drive_controller-1] [WARN] [1790543562.800351623] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543565.919316094] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543567.939397302] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543569.976983098] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543571.979286958] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543572.645545942] [diff_drive_controller]: encoder latency ms: min 14.7 / mean 48.5 / max 85.0, stamps rejected 0/11
+[diff_drive_controller-1] [WARN] [1790543573.979855919] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543575.983102646] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543580.418972116] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543582.421489754] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543582.645851238] [diff_drive_controller]: encoder latency ms: min 131.2 / mean 212.5 / max 390.2, stamps rejected 0/39
+[diff_drive_controller-1] [WARN] [1790543584.447195751] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543586.460141805] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543588.480172957] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543590.498787374] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543592.655201253] [diff_drive_controller]: encoder latency ms: min 104.2 / mean 163.0 / max 262.9, stamps rejected 0/10
+[diff_drive_controller-1] [WARN] [1790543593.981098694] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543596.022977064] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543600.560913710] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543602.579105556] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543602.643422159] [diff_drive_controller]: encoder latency ms: min 132.3 / mean 197.8 / max 270.9, stamps rejected 0/24
+[diff_drive_controller-1] [WARN] [1790543604.602478452] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543606.603518929] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543611.018839121] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543612.641648983] [diff_drive_controller]: encoder latency ms: min 80.2 / mean 112.8 / max 236.1, stamps rejected 0/27
+[diff_drive_controller-1] [WARN] [1790543613.019353045] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543615.040845931] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543617.062828667] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543620.581528270] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543622.602127864] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543622.645853021] [diff_drive_controller]: encoder latency ms: min 127.1 / mean 158.9 / max 206.8, stamps rejected 0/35
+[diff_drive_controller-1] [WARN] [1790543624.618196070] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543628.642035576] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543630.658254208] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543632.644483529] [diff_drive_controller]: encoder latency ms: min 57.0 / mean 100.5 / max 159.5, stamps rejected 0/43
+[diff_drive_controller-1] [WARN] [1790543632.658506188] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543634.679385874] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543636.679715539] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543638.699346860] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543641.899389119] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543642.643577330] [diff_drive_controller]: encoder latency ms: min 109.6 / mean 138.0 / max 163.2, stamps rejected 0/9
+[diff_drive_controller-1] [WARN] [1790543645.380721017] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543647.382062567] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543651.039077185] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543652.648113404] [diff_drive_controller]: encoder latency ms: min 33.3 / mean 96.2 / max 237.9, stamps rejected 0/17
+[diff_drive_controller-1] [WARN] [1790543653.039621775] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543655.070869211] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543657.439232426] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543659.458813968] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543661.459647706] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543662.643953979] [diff_drive_controller]: encoder latency ms: min 112.7 / mean 175.8 / max 231.5, stamps rejected 0/19
+[diff_drive_controller-1] [WARN] [1790543663.479396044] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543665.479505692] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543668.200207026] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543670.219050591] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543672.641503343] [diff_drive_controller]: encoder latency ms: min 104.3 / mean 146.8 / max 246.0, stamps rejected 0/31
+[diff_drive_controller-1] [WARN] [1790543672.939873017] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543674.939948499] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543676.953231773] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543682.641319734] [diff_drive_controller]: encoder latency ms: min 55.2 / mean 92.1 / max 168.7, stamps rejected 0/74
+[diff_drive_controller-1] [WARN] [1790543683.804182752] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543685.818650169] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543687.861944347] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543689.891489642] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543691.899127553] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543692.645261015] [diff_drive_controller]: encoder latency ms: min 72.1 / mean 126.0 / max 168.2, stamps rejected 0/21
+[diff_drive_controller-1] [WARN] [1790543693.918414023] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543695.961126759] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543698.760805800] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543701.301297585] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543702.643201486] [diff_drive_controller]: encoder latency ms: min 128.9 / mean 185.4 / max 326.4, stamps rejected 0/20
+[diff_drive_controller-1] [WARN] [1790543704.625455595] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [WARN] [1790543706.660462042] [diff_drive_controller]: Encoder telemetry stale
+[diff_drive_controller-1] [INFO] [1790543712.642630228] [diff_drive_controller]: encoder latency ms: min 11.2 / mean 48.0 / max 409.7, stamps rejected 0/97
+[diff_drive_controller-1] [INFO] [1790543722.640774145] [diff_drive_controller]: encoder latency ms: min 8.2 / mean 24.6 / max 48.4, stamps rejected 0/166
+[diff_drive_controller-1] [INFO] [1790543732.640135480] [diff_drive_controller]: encoder latency ms: min 7.7 / mean 24.9 / max 31.6, stamps rejected 0/169
+[diff_drive_controller-1] [INFO] [1790543742.640613289] [diff_drive_controller]: encoder latency ms: min 7.7 / mean 25.2 / max 68.0, stamps rejected 0/163
+[diff_drive_controller-1] [INFO] [1790543752.641768149] [diff_drive_controller]: encoder latency ms: min 8.3 / mean 24.8 / max 35.4, stamps rejected 0/165
+[diff_drive_controller-1] [INFO] [1790543762.639746919] [diff_drive_controller]: encoder latency ms: min 7.5 / mean 25.0 / max 31.5, stamps rejected 0/170
+[diff_drive_controller-1] [INFO] [1790543772.642290918] [diff_drive_controller]: encoder latency ms: min 6.1 / mean 24.0 / max 32.4, stamps rejected 0/167
+[diff_drive_controller-1] [INFO] [1790543782.643199854] [diff_drive_controller]: encoder latency ms: min 6.5 / mean 23.1 / max 38.1, stamps rejected 0/160
+[diff_drive_controller-1] [INFO] [1790543792.641129125] [diff_drive_controller]: encoder latency ms: min 5.4 / mean 23.2 / max 39.8, stamps rejected 0/168
+[diff_drive_controller-1] [INFO] [1790543802.642218022] [diff_drive_controller]: encoder latency ms: min 5.2 / mean 23.1 / max 41.4, stamps rejected 0/165
+[diff_drive_controller-1] [INFO] [1790543812.642839460] [diff_drive_controller]: encoder latency ms: min 4.9 / mean 21.8 / max 43.1, stamps rejected 0/166
+                                                                                                                                                                                                                                                                                                                      
