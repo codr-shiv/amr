@@ -3,9 +3,11 @@
 How the ESP32 turns a wheel speed target (rad/s) into motor PWM: task structure, the control law line by line,
 command sources, safety logic, the serial console, and tuning.
 
-Code: [`firmware/esp32/amr_esp32/amr_esp32.ino`](../../firmware/esp32/amr_esp32/amr_esp32.ino).
+Code: [`firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino`](../../firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino).
 Encoder measurement is covered in [04-encoder-decoding.md](04-encoder-decoding.md), the ROS link in
 [02-micro-ros-communication.md](02-micro-ros-communication.md).
+
+> The ESP32 hardware team's own documentation in [`firmware/esp32/`](../../firmware/esp32/README.md) (README + `docs/01–05`) is the authoritative source for the ESP32 side; this guide explains how it fits the rest of the stack.
 
 ---
 
@@ -96,13 +98,12 @@ The Cytron driver is used in **sign-magnitude** mode: one PWM input for speed, o
 | `KI` | 12.5 | 10.0 | PWM per (rad/s·s) of accumulated error |
 | `MAX_SPEED` | 17.0 | 17.0 | rad/s target limit |
 | `CPR` | 752.6 | 536.1 | counts per wheel revolution |
-| `ENC_INVERT` / `MOTOR_INVERT` | true / true | false / false | sign conventions (forward = positive) |
+| `ENC_INVERT` / `MOTOR_INVERT` | false / false | true / true | sign conventions (forward = positive) |
 
-Motors: 12 V planetary geared DC motors with ME-37 7-PPR encoders; the right one is a PG36M555-19.2K (262 RPM no-load
-≈ 27.4 rad/s, 45 N·cm), the left one has a 26.9:1 gearbox. If the left motor uses the same base motor, its no-load wheel speed is about
-262 × 19.2 / 26.9 ≈ 187 RPM ≈ 19.6 rad/s, so the common 17 rad/s limit is set by the **left** wheel: it keeps both below
-their no-load speeds with a little headroom for the PI loop (consistent with the left feed-forward needing ~84 % PWM at
-17 rad/s, below).
+Motors: 2 × Pro-Range **24 V** planetary gear DC motors with Hall quadrature encoders, left ≈ 26.9 : 1, right ≈ 19.1 : 1.
+`CPR`, `KFF` and `PWM_MIN` were **measured** with the bench tools (`tools/02` and `tools/03_motor_characterize`); `KP`/`KI`
+were **tuned** with `tools/04_wheel_pid_tuning` ([`docs/02_pid_control.md`](../../firmware/esp32/docs/02_pid_control.md)).
+`KFF` and `PWM_MIN` depend on the motor supply voltage: re-run `tools/03_motor_characterize` after a battery or supply change.
 
 Feed-forward alone at full speed: left `49.72·17 + 11.8 ≈ 857`, right `43.54·17 + 12 ≈ 752` PWM counts (84 % / 74 % of 1023),
 leaving headroom for PI correction.

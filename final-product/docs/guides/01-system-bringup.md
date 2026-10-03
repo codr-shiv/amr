@@ -35,7 +35,7 @@ Both scripts locate the repo from their own path (`readlink -f`), so they work f
    `AGENT_PORT=8888`; `LOG_DIR` default `~/amr_logs`. Unknown mode → usage, exit 1.
 2. **Environment:** `source /opt/ros/humble/setup.bash`, then `microros_ws/install/setup.bash` and `amr_ws/install/setup.bash`.
    A missing workspace → "Workspace not built", exit 1. In nav mode a missing map → exit 1 (before anything starts).
-   Prints `ROS_DOMAIN_ID` and `ROS_LOCALHOST_ONLY` (inherited from your shell).
+   Exports `ROS_DOMAIN_ID=0` (the ESP32's domain; warns if your shell had another value) and `ROS_LOCALHOST_ONLY=0`, and prints them.
 3. **Cleanup of leftovers** from a previous run: `pkill -f` for `micro_ros_agent udp4`, `static_transform_publisher`,
    `diff_drive_controller`, `rplidar`, `slam_toolbox`, `nav2`, `lifecycle_manager`, `amcl`, `map_server`,
    `teleop_twist_keyboard`, `ros2 launch amr_navigation`; wait 2 s; restart the ROS 2 CLI daemon (fresh discovery cache).
@@ -115,6 +115,6 @@ Never run teleop while Nav2 is running: both publish `/cmd_vel`.
 
 ## 6. Network
 
-- Pi and laptop: same `ROS_DOMAIN_ID`, `ROS_LOCALHOST_ONLY=0`, same subnet (DDS discovery uses multicast).
+- Pi and laptop: `ROS_DOMAIN_ID=0`, `ROS_LOCALHOST_ONLY=0`, same subnet (DDS discovery uses multicast).
 - ESP32: micro-ROS domain is set in the firmware; see [02-micro-ros-communication.md §8](02-micro-ros-communication.md).
 - RViz and other heavy GUIs run on the laptop, not the Pi.

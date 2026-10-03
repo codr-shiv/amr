@@ -40,7 +40,7 @@ final-product/
 │       ├── amr_teleop/         # WASD keyboard teleop (ros2 run amr_teleop wasd_teleop)
 │       └── rplidar_ros/        # Slamtec RPLIDAR driver (vendored copy)
 ├── microros_ws/                # micro-ROS agent workspace (vendored copy)
-├── firmware/esp32/             # ESP32 firmware: wheel PID + encoders + micro-ROS (Arduino sketch)
+├── firmware/esp32/             # ESP32 (hardware team): Wi-Fi firmware, wired variant, bench tools, docs
 ├── maps/                       # saved maps (map_server .yaml + .pgm)
 ├── scripts/
 │   ├── install_deps.sh         # one-time apt + rosdep install on a fresh Pi
@@ -123,11 +123,12 @@ scripts/build.sh            # builds microros_ws, then amr_ws (--symlink-install
 - `scripts/build.sh amr` rebuilds only `amr_ws`. Extra args go to colcon, e.g. `scripts/build.sh amr --packages-select amr_navigation`.
 - `scripts/build.sh agent` rebuilds only the micro-ROS agent. It needs internet: the agent's CMake downloads Micro-XRCE-DDS-Agent.
 
-**Network:** the Pi and the laptop (RViz) must use the same ROS domain. Put these two lines in `~/.bashrc`
-on **both** machines (the bringup script inherits them from your shell and prints them at startup):
+**Network:** everything runs in ROS **domain 0**, because that's the domain the ESP32 firmware uses.
+`amr_bringup.sh` sets `ROS_DOMAIN_ID=0` itself. Put these two lines in `~/.bashrc` on **both** the Pi and the laptop, so
+`ros2` commands you type and RViz use the same domain (remove any old `ROS_DOMAIN_ID=30` line):
 
 ```bash
-export ROS_DOMAIN_ID=30
+export ROS_DOMAIN_ID=0
 export ROS_LOCALHOST_ONLY=0
 ```
 
@@ -135,7 +136,7 @@ export ROS_LOCALHOST_ONLY=0
 `sudo usermod -aG dialout $USER` (then log out and in), or install the driver's udev rule with
 `amr_ws/src/rplidar_ros/scripts/create_udev_rules.sh`.
 
-**ESP32:** set your Wi-Fi name/password and the Pi's current IP in the sketch, then flash it:
+**ESP32:** copy `secrets.example.h` to `secrets.h` (Wi-Fi name/password, the Pi's current IP), then flash `amr_esp32_wifi.ino`:
 see the [firmware README](firmware/esp32/README.md).
 
 ---
@@ -205,8 +206,8 @@ Older maps from the iteration phase are in `learning/iteration-phase/nav_ws/`.
 - **Nominal geometry.** The Nav2 footprint (0.50 × 0.46 m) is a placeholder, and wheel radius / separation are
   nominal values, not calibrated (section 6.3).
 - **Wheel odometry only.** No IMU or sensor fusion (e.g. `robot_localization` EKF), so odometry drifts on slip.
-- **Compile-time network settings.** The Wi-Fi name/password and the Pi's IP are constants in the ESP32 sketch;
-  the Pi's IP isn't fixed, so the firmware has to be re-flashed when it changes.
+- **Compile-time network settings.** The Wi-Fi name/password and the Pi's IP are constants in `secrets.h`, so the Pi
+  needs a static IP (or DHCP reservation); otherwise the firmware has to be re-flashed when the IP changes.
 - **No command arbitration.** Teleop and Nav2 both publish `/cmd_vel` with no mux, so they must never run together.
 - `amr_navigation/config/mapper_params_real.yaml` (alternative SLAM config) uses two parameter names that
   SLAM Toolbox ignores (see the header of that file).
@@ -218,16 +219,16 @@ Older maps from the iteration phase are in `learning/iteration-phase/nav_ws/`.
 - [ ] Clone and link to `~/amr` (section 3), then `scripts/install_deps.sh` and `scripts/build.sh` (first build on the
       Pi's ARM CPU, including the micro-ROS agent, which needs internet).
 - [ ] In the Pi's `~/.bashrc`: remove `source ~/microros_ws/install/local_setup.bash` and `source install/setup.bash`
-      (the old workspaces must not be sourced together with the new ones); keep the `ROS_DOMAIN_ID` / `ROS_LOCALHOST_ONLY` exports.
+      (the old workspaces must not be sourced together with the new ones); replace the `ROS_DOMAIN_ID=30` lines with `export ROS_DOMAIN_ID=0` (section 3) and keep `ROS_LOCALHOST_ONLY=0`.
+- [ ] Give the Pi a static IP or a DHCP reservation on the router (the ESP32 connects to a fixed `AGENT_IP`).
 - [ ] LiDAR access: `sudo usermod -aG dialout $USER` (or the rplidar udev rule), see section 3.
-- [ ] ESP32: set `SSID_NAME`, `SSID_PASSWORD` and the Pi's current IP (`AGENT_IP`) in the sketch, then compile and flash
-      ([firmware README](firmware/esp32/README.md)). The sketch hasn't been compiled since it was added to the repo.
+- [ ] ESP32: copy `secrets.example.h` to `secrets.h`, set `SSID_NAME`, `SSID_PASSWORD` and the Pi's current IP (`AGENT_IP`), then compile and flash `amr_esp32_wifi.ino`
+      ([firmware README](firmware/esp32/README.md)). This is the firmware the hardware team runs on the robot.
 
 First run (wheels lifted first):
 - [ ] `./amr_bringup.sh robot`: all three waits print `ok` (`/encoder_telemetry`, `/odom`, `/scan`).
-      If `/encoder_telemetry` is NOT READY while the agent log shows the ESP32 connecting, it's most likely a **ROS domain
-      mismatch**: the firmware doesn't set a domain (→ 0) while `~/.bashrc` sets `ROS_DOMAIN_ID=30`. Check with
-      `ROS_DOMAIN_ID=0 ros2 topic list`; fix: [micro-ROS guide §8](docs/guides/02-micro-ros-communication.md).
+      If `/encoder_telemetry` is NOT READY, check the agent log and the ESP32 serial monitor (Wi-Fi, `AGENT_IP`):
+      [ESP32 troubleshooting](firmware/esp32/docs/05_troubleshooting.md).
 - [ ] Rates: `ros2 topic hz /encoder_telemetry` ≈ 20 Hz, `/odom` ≈ 50 Hz, `/scan` ≈ 10 Hz.
 - [ ] `ros2 run amr_navigation check_setup.sh`: no FAIL lines.
 - [ ] `~/amr_logs/diff_drive.log` shows `encoder latency ... stamps rejected 0/N` (ESP32 time sync works).

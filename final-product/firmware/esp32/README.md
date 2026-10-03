@@ -1,238 +1,138 @@
-# ESP32 firmware: wheel PID + encoders + micro-ROS
+# ESP32 low-level controller
 
-`amr_esp32/amr_esp32.ino` is the Arduino sketch for the AMR's low-level controller:
-
-- **Per-wheel velocity control:** feed-forward + PI, setpoint ramp, anti-windup, 50 Hz.
-- **Quadrature encoder decoding:** 4× (full quad) via `ESP32Encoder`, giving position and filtered velocity.
-- **micro-ROS over Wi-Fi (UDP):** receives wheel targets from the Raspberry Pi and sends encoder telemetry back.
-- **Serial console:** bench tests and live PID tuning without ROS.
-
-It is the "ESP32 (micro-ROS)" block of the system architecture. On the Pi side it talks to
-[`amr_diff_drive`](../../amr_ws/src/amr_diff_drive/README.md) through the micro-ROS agent.
+The ESP32 is the robot's real-time motor controller. It reads the two wheel encoders, runs a velocity control loop for each wheel, drives the motors through the Cytron driver, and exchanges data with the Raspberry Pi over micro-ROS.
 
 ```
- amr_diff_drive (Pi) ──/left_vel, /right_vel──► micro-ROS agent ──UDP:8888──► ESP32 ──PWM+DIR──► Cytron motor driver ──► motors
-        ▲                                        (udp4, Pi)                    │
-        └──────────── /encoder_telemetry ◄─────────────────────────────────────┘◄── encoders
+                 left_vel, right_vel (rad/s)
+ Raspberry Pi  ─────────────────────────────►  ESP32  ──PWM + DIR──►  Cytron driver ──► motors
+ (micro-ROS    ◄─────────────────────────────         ◄──A/B pulses──  wheel encoders
+  agent)         encoder_telemetry (rad, rad/s)
 ```
 
----
+This folder covers only the ESP32 side. Everything the Pi needs to know about it is in [the ROS 2 interface](#ros-2-interface) below.
 
-## 1. ROS 2 interface
+## Contents
 
-| Direction | Topic | Type | QoS | Content |
-|---|---|---|---|---|
-| Pi → ESP32 | `/left_vel` | `std_msgs/msg/Float64` | reliable | left wheel target, **rad/s** |
-| Pi → ESP32 | `/right_vel` | `std_msgs/msg/Float64` | reliable | right wheel target, **rad/s** |
-| ESP32 → Pi | `/encoder_telemetry` | `sensor_msgs/msg/JointState` | best effort, **20 Hz** | `name: [left_wheel, right_wheel]`, `position` rad (cumulative since boot), `velocity` rad/s (low-pass filtered), `header.stamp` = Pi time |
-
-Node name: `esp32_wifi_wheel_node`. Positive values mean the wheel drives the robot forward.
-
-How this matches the Pi side (`amr_diff_drive/config/diff_drive.yaml`):
-
-| Firmware | Pi (`amr_diff_drive`) |
+| Path | What it is |
 |---|---|
-| Stops the motors if `/left_vel` or `/right_vel` are older than **500 ms** (`CMD_TIMEOUT_MS`) | Publishes both at **50 Hz** continuously, including `0.0` when idle |
-| Clamps targets to **17 rad/s**, scaling both wheels together (`*_MAX_SPEED`) | Clamps to the same `max_wheel_speed: 17.0` (change both together) |
-| Joint names `left_wheel`, `right_wheel` | `left_joint_name`, `right_joint_name` |
-| `header.stamp` from `rmw_uros_epoch_nanos()` after `rmw_uros_sync_session()` | `use_encoder_stamp: true` uses it for latency compensation |
-| Falls back to `millis()` (time since boot) as the stamp if time sync failed | Rejects that stamp (offset > `max_stamp_offset`) and uses receive time instead, logging a warning |
+| [`firmware/amr_esp32_wifi/`](firmware/amr_esp32_wifi/) | **The firmware running on the robot.** micro-ROS over Wi-Fi (UDP). |
+| [`firmware/amr_esp32_serial/`](firmware/amr_esp32_serial/) | The same firmware with micro-ROS over a USB cable (wired). See [status](#status). |
+| [`tools/`](tools/) | Four stand-alone bench sketches for checking encoders, measuring the motors and tuning the PID. |
+| [`docs/01_encoder_theory.md`](docs/01_encoder_theory.md) | How quadrature encoders work and how the ESP32 decodes them. |
+| [`docs/02_pid_control.md`](docs/02_pid_control.md) | The wheel velocity controller and how it was tuned. |
+| [`docs/03_microros_interface.md`](docs/03_microros_interface.md) | Topics, message format, Wi-Fi and serial transports, and how the control and micro-ROS code were combined. |
+| [`docs/04_bringup_procedure.md`](docs/04_bringup_procedure.md) | Step-by-step procedure from a bare motor to a robot driven from ROS, with all commands. |
+| [`docs/05_troubleshooting.md`](docs/05_troubleshooting.md) | Symptoms, causes and fixes. |
 
----
+## Hardware
 
-## 2. Firmware architecture
+| Part | Details |
+|---|---|
+| Controller | ESP32 DevKit (ESP32-WROOM, "ESP32 Dev Module" in Arduino IDE) |
+| Motors | 2 × Pro-Range 24 V planetary gear DC motor with Hall quadrature encoder |
+| Motor driver | Cytron driver in PWM + DIR mode |
+| Left motor | Gear ratio ≈ 26.9 : 1, **752.6 counts per wheel revolution** |
+| Right motor | Gear ratio ≈ 19.1 : 1, **536.1 counts per wheel revolution** |
 
-| Part | Runs in | What it does |
+The two motors have different gearboxes. The firmware handles this by giving each wheel its own counts-per-revolution value and its own controller parameters. See [docs/02_pid_control.md](docs/02_pid_control.md#4-two-different-motors).
+
+## Pin map
+
+| Signal | Left wheel | Right wheel |
 |---|---|---|
-| `controlTask` | FreeRTOS task, **core 1**, fixed **50 Hz** (`vTaskDelayUntil`) | read encoders → velocity filter → setpoint ramp → feed-forward + PI → PWM/DIR. Wi-Fi and micro-ROS never block it. |
-| `loop()` | Arduino loop | micro-ROS state machine (wait → connect → spin/publish → reconnect), serial commands, serial status output |
-| `sh` (struct `Shared`) | shared, protected by a spinlock | the only data exchanged between the two: targets and mode in, positions, velocities and PWM out |
+| Encoder A | GPIO 32 | GPIO 25 |
+| Encoder B | GPIO 33 | GPIO 26 |
+| PWM to Cytron | GPIO 18 | GPIO 23 |
+| DIR to Cytron | GPIO 19 | GPIO 22 |
 
-Control law per wheel, in PWM counts (0..1023):
+Also required:
 
-```
-ref   = ramp(target, ACCEL_LIMIT)                          # rad/s, max 40 rad/s²
-u     = kff·ref + sign(ref)·pwmMin + kp·(ref − meas) + I   # I clamped to ±I_LIMIT, frozen when saturated
-meas  = VEL_ALPHA·raw + (1 − VEL_ALPHA)·meas               # raw = Δcounts · 2π / (CPR · dt)
-```
+- Encoder VCC to the ESP32 **3V3** pin and encoder GND to ESP32 GND. ESP32 inputs are not 5 V tolerant.
+- ESP32 GND connected to the Cytron driver GND (common ground).
+- Motor supply connected only to the Cytron power terminals, never to the ESP32.
 
-With `target = 0` and the ramp at 0, the motor is switched off and the integrator reset (no creep at standstill).
+The serial firmware additionally uses GPIO 2 (status LED) and, only when debug is enabled, GPIO 16 / 17 (Serial2).
 
-micro-ROS connection states: `WAITING_AGENT` (ping every 500 ms) → `AGENT_AVAILABLE` (create node, subscriptions, publisher, time sync) → `AGENT_CONNECTED` (ping every 1 s, spin, publish at 20 Hz) → `AGENT_DISCONNECTED` (stop the motors, destroy entities, back to waiting). **No reset is needed** when the Pi or agent restarts.
+## ROS 2 interface
 
----
-
-## 3. Configuration (top of the sketch)
-
-### Network
-
-| Constant | Value | Notes |
-|---|---|---|
-| `SSID_NAME` / `SSID_PASSWORD` | placeholders (`YOUR_WIFI_SSID` / `YOUR_WIFI_PASSWORD`) | **Set before compiling.** The Wi-Fi network the Pi is on. |
-| `AGENT_IP` | example `192.168.0.100` | **Set before compiling.** The Raspberry Pi's current IP; it isn't fixed, so check it on the Pi with `hostname -I` every time. |
-| `AGENT_PORT` | `8888` | Must match `AGENT_PORT` in `amr_bringup.sh` |
-
-### Wiring (Cytron motor driver, PWM + DIR mode)
-
-| Signal | Left wheel (motor 1, 26.9:1) | Right wheel (motor 2, 19.1:1) |
-|---|---|---|
-| Encoder A / B | GPIO 32 / 33 | GPIO 25 / 26 |
-| PWM (speed) | GPIO 18 (LEDC ch 0) | GPIO 23 (LEDC ch 1) |
-| DIR (direction) | GPIO 19 | GPIO 22 |
-
-PWM: 20 kHz, 10-bit (0..1023). Encoder inputs use the ESP32's internal weak pull-ups and a glitch filter.
-
-### Per-wheel parameters
-
-| Constant | Left | Right | Meaning |
+| Topic | Direction | Type | Content |
 |---|---|---|---|
-| `*_CPR` | 752.6 | 536.1 | encoder counts per **wheel** revolution (4× decoding, after gearbox) |
-| `*_ENC_INVERT` | `true` | `false` | flip so forward = positive position |
-| `*_MOTOR_INVERT` | `true` | `false` | flip so positive PWM = forward |
-| `*_KFF` | 49.72 | 43.54 | feed-forward, PWM per rad/s |
-| `*_PWM_MIN` | 11.8 | 12.0 | PWM added to overcome static friction |
-| `*_KP` | 30.0 | 25.0 | proportional gain, PWM per rad/s of error |
-| `*_KI` | 12.5 | 10.0 | integral gain |
-| `*_MAX_SPEED` | 17.0 | 17.0 | rad/s limit (both wheels scaled together to keep the curve) |
+| `left_vel` | Pi → ESP32 | `std_msgs/Float64` | Left wheel target speed, **rad/s** |
+| `right_vel` | Pi → ESP32 | `std_msgs/Float64` | Right wheel target speed, **rad/s** |
+| `encoder_telemetry` | ESP32 → Pi | `sensor_msgs/JointState`, best effort, 20 Hz | `name = ["left_wheel", "right_wheel"]`, `position` = cumulative wheel angle in **rad**, `velocity` = filtered wheel speed in **rad/s**, `header.stamp` = time the encoders were read |
 
-The two motors have different gearboxes, which is why CPR and gains differ per side.
+Rules the Pi side must follow:
 
-### Control and timing
+1. **Publish `left_vel` and `right_vel` continuously**, at 5 Hz or more (20 to 50 Hz is typical), even when the speed does not change. If either topic is silent for 500 ms, both wheels stop.
+2. **Send wheel angular speed in rad/s.** To convert from a linear speed in m/s, divide by the wheel radius.
+3. **Positive means robot forward for both wheels.**
+4. Speeds above 17 rad/s are scaled down. Both wheels are scaled by the same factor, so the robot keeps its commanded curvature.
 
-| Constant | Value | Meaning |
-|---|---|---|
-| `LOOP_HZ` | 50 | control rate |
-| `VEL_ALPHA` | 0.3 | velocity low-pass filter (higher = less filtering) |
-| `ACCEL_LIMIT` | 40.0 rad/s² | setpoint ramp |
-| `I_LIMIT` | 400 | max PWM from the integral term |
-| `PUB_INTERVAL_MS` | 50 | telemetry period (20 Hz) |
-| `CMD_TIMEOUT_MS` | 500 | stop if no command for this long (`0` = never; don't use on the robot) |
-| `DEBUG_ROS_RX` | `false` | print every received command (slows the loop) |
+Full details are in [docs/03_microros_interface.md](docs/03_microros_interface.md).
 
----
+## Quick start (Wi-Fi firmware)
 
-## 4. Build and flash (Arduino IDE)
+1. Install the Arduino IDE, the **esp32** board package, and the libraries **ESP32Encoder** and **micro_ros_arduino** (the release that matches your ROS 2 distro). Details: [docs/04_bringup_procedure.md](docs/04_bringup_procedure.md#1-software-setup).
+2. In `firmware/amr_esp32_wifi/`, copy `secrets.example.h` to `secrets.h` and fill in the Wi-Fi name, password and the Pi's IP address. `secrets.h` is ignored by git.
+3. Open `amr_esp32_wifi.ino`, select board **ESP32 Dev Module**, and upload.
+4. On the Pi, start the agent:
+   ```bash
+   ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
+   ```
+5. Check that data is flowing:
+   ```bash
+   ros2 topic hz /encoder_telemetry        # about 20 Hz
+   ros2 topic echo /encoder_telemetry
+   ```
+6. With the wheels off the ground, send a test command:
+   ```bash
+   ros2 topic pub -r 20 /left_vel  std_msgs/msg/Float64 "{data: 5.0}" &
+   ros2 topic pub -r 20 /right_vel std_msgs/msg/Float64 "{data: 5.0}"
+   ```
+   Both wheels should turn at 5 rad/s and stop within half a second of pressing Ctrl+C.
 
-> ⚠️ **Before every compile/upload**, edit these three constants at the top of `amr_esp32.ino`:
-> - `SSID_NAME`, `SSID_PASSWORD`: your Wi-Fi network. The repo only has placeholders; don't commit your real password.
-> - `AGENT_IP`: the Pi's **current** IP (`hostname -I` on the Pi). It can change between sessions.
->
-> With the wrong values the ESP32 hangs at `Wi-Fi connecting` or `waiting for micro-ROS agent` (section 8).
+For the wired version, see [docs/03_microros_interface.md](docs/03_microros_interface.md#7-wired-usb-serial-transport).
 
-1. **File > Preferences**: add the ESP32 board manager URL
-   `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
-2. **Tools > Board > Boards Manager**: install **esp32** by Espressif. The sketch supports both the 2.x and 3.x core LEDC APIs.
-3. Install the libraries:
-   - **micro_ros_arduino, Humble release** (`v2.0.7-humble.zip` from the micro_ros_arduino GitHub releases) via **Sketch > Include Library > Add .ZIP Library**. It must match the Pi's ROS 2 distro (Humble).
-   - **ESP32Encoder** (by Kevin Harrington) via **Library Manager**.
-4. Open `firmware/esp32/amr_esp32/amr_esp32.ino`, set `SSID_NAME`, `SSID_PASSWORD` and `AGENT_IP` (see the note above), select your ESP32 board and port, and **Upload**.
+## Safety behaviour
 
----
+- Motors are held at zero from power-on until the micro-ROS agent is connected.
+- Motors stop if the agent connection is lost. The ESP32 keeps retrying and reconnects on its own.
+- Motors stop if velocity commands stop arriving for 500 ms.
+- After a reconnect, the wheels wait for new commands. Old commands are never resumed.
+- Invalid numbers from the network (NaN, infinity, absurd values) are ignored.
 
-## 5. Running
+## Debug and tuning commands
 
-The micro-ROS agent must run on the Pi. `amr_bringup.sh` starts it first and waits for `/encoder_telemetry`,
-so normally you just power the ESP32 and run the bringup script (see the [main README](../../README.md)).
-
-To run the agent by hand:
-```bash
-source /opt/ros/humble/setup.bash
-source ~/amr/microros_ws/install/setup.bash
-ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888
-```
-
-Serial monitor (115200 baud) on boot:
-```
-# === AMR ESP32 firmware: PID + encoders + micro-ROS ===
-# L: kff=49.72 min=11.8 kp=30.00 ki=12.50 max=17.0 rad/s  cpr=752.6
-# R: kff=43.54 min=12.0 kp=25.00 ki=10.00 max=17.0 rad/s  cpr=536.1
-# Wi-Fi connecting.....
-# Wi-Fi connected, ESP32 IP = 192.168.0.xxx
-# waiting for micro-ROS agent at 192.168.0.100:8888 ...
-# micro-ROS: CONNECTED to agent
-[ROS OK |ROS] tgt L=  0.00 R=  0.00 | meas L=  0.00 R=  0.00 rad/s | pos L=    0.00 R=    0.00 rad | pwm L=    0 R=    0
-```
-
-### Check from the Pi (wheels lifted off the ground)
-```bash
-ros2 topic hz /encoder_telemetry            # ~20 Hz
-ros2 topic echo /encoder_telemetry --once
-# Commands must be sent CONTINUOUSLY (>= 5 Hz) or the 500 ms timeout stops the motors:
-ros2 topic pub -r 10 /left_vel  std_msgs/msg/Float64 "{data: 5.0}" &
-ros2 topic pub -r 10 /right_vel std_msgs/msg/Float64 "{data: 5.0}"
-```
-Don't do this while `amr_diff_drive` is running: it publishes `/left_vel` and `/right_vel` too.
-
----
-
-## 6. Serial commands (bench tests and tuning)
-
-115200 baud, line ending **Newline**. These work without ROS.
+With the Wi-Fi firmware, open the Arduino Serial Monitor at 115200 baud with line ending "Newline". A status line is printed every second.
 
 | Command | Effect |
 |---|---|
-| `ros` | hand control back to ROS (default at boot) |
-| `s` | STOP and hold; ROS commands are ignored until `ros` |
-| `t 10` / `t 10 5` | closed-loop target in rad/s for both wheels / left and right (ignores ROS) |
-| `sq 10 2000` | square wave 10 ↔ 0 rad/s, period 2000 ms (step-response tuning) |
-| `pwm 300 300` | open-loop PWM (−1023..1023), PID bypassed |
-| `kp L 12` | set a parameter for `L`, `R` or `B` (both): `kp`, `ki`, `kff`, `min`, `max` (resets the integrator) |
-| `p` | print the parameters |
-| `plot 0` / `plot 1` / `plot 2` | 1 Hz status text / speeds for the Arduino Serial Plotter / speeds + PWM % |
+| `ros` | Give control back to ROS (the default at boot) |
+| `s` | Stop and hold. ROS commands are ignored until `ros` |
+| `t 10` or `t 10 5` | Manual target in rad/s for both wheels, or left and right |
+| `sq 10 2000` | Square-wave test: 10 rad/s and 0, period 2000 ms |
+| `pwm 300 300` | Open-loop PWM (−1023 to 1023), controller bypassed |
+| `kp L 12` | Set a parameter for `L`, `R` or `B` (both). Parameters: `kp ki kff min max` |
+| `p` | Print all parameters |
+| `plot 0`, `plot 1`, `plot 2` | Status text, speeds for the Serial Plotter, speeds plus PWM % |
 
-Tuning changes live only in RAM. Copy good values into the `L_*` / `R_*` constants and re-flash.
+Values changed with these commands are lost on reset. To keep them, edit the constants at the top of the firmware.
 
-Typical tuning flow:
-1. `pwm 300 300`: check that both wheels turn **forward**. If one doesn't, flip its `*_MOTOR_INVERT`.
-2. Check that `pos` increases for both. If one decreases, flip its `*_ENC_INVERT`.
-3. `plot 1`, then `sq 10 2000`: tune `kff` and `min` first (the steady state should be close without PI), then `kp` and `ki` for a fast step without overshoot.
-4. `ros` to hand control back.
+## Current parameters
 
----
+| Parameter | Left | Right | Meaning |
+|---|---|---|---|
+| `CPR` | 752.6 | 536.1 | Encoder counts per wheel revolution (measured) |
+| `KFF` | 49.72 | 43.54 | Feedforward: PWM per rad/s (measured) |
+| `PWM_MIN` | 11.8 | 12.0 | Deadband compensation (measured) |
+| `KP` | 30.0 | 25.0 | Proportional gain (tuned) |
+| `KI` | 12.5 | 10.0 | Integral gain (tuned) |
+| `MAX_SPEED` | 17.0 | 17.0 | Speed limit in rad/s |
+| `ENC_INVERT` / `MOTOR_INVERT` | false / false | true / true | Sign conventions so that positive = robot forward |
 
-## 7. Safety behaviour
+`KFF` and `PWM_MIN` depend on the motor supply voltage. Re-run the characterisation tool if the battery or supply changes.
 
-| Situation | Behaviour |
-|---|---|
-| Agent not connected / connection lost | motors stopped, stored ROS targets cleared, reconnects automatically |
-| No `/left_vel` or `/right_vel` for 500 ms | motors stopped (both commands must be fresh) |
-| NaN / inf / absurd (> 1e6) command | ignored |
-| Target above `*_MAX_SPEED` | both wheels scaled by the same factor |
-| Boot, before Wi-Fi | control task already running with targets = 0 |
+## Status
 
----
-
-## 8. Troubleshooting
-
-| Symptom | Cause / fix |
-|---|---|
-| Stuck at `# Wi-Fi connecting.....` | wrong `SSID_NAME` / `SSID_PASSWORD`, or network out of range (the ESP32 needs 2.4 GHz) |
-| Stuck at `waiting for micro-ROS agent` | agent not running on the Pi, or `AGENT_IP` isn't the Pi's current IP (`hostname -I`), or `AGENT_PORT` mismatch |
-| `ros2 topic list` on the Pi doesn't show `/encoder_telemetry` | **ROS domain mismatch**: the sketch doesn't set a domain ID, so it uses domain 0; if the Pi uses `ROS_DOMAIN_ID=30`, set the domain in the firmware or leave it unset on the Pi ([micro-ROS guide §8](../../docs/guides/02-micro-ros-communication.md)). Also see the rows above |
-| Wheels stop after ½ s | commands sent once (`--once`) instead of continuously; use `-r 10`, or run `amr_diff_drive` |
-| `amr_diff_drive` warns `Encoder stamp not used (stamp offset ...)` | time sync failed, so the stamps are time-since-boot. Reset the ESP32 once the agent is up; check the Pi's clock (`chronyc tracking`). Odometry still works, just without latency compensation. |
-| A wheel spins backwards / odometry turns the wrong way | fix `*_MOTOR_INVERT` / `*_ENC_INVERT` in the firmware (section 6), not on the Pi |
-| Wheel oscillates or hums | lower `kp` / `ki` for that wheel, or raise the filtering (lower `VEL_ALPHA`) |
-
-### Errors hit during the original setup
-
-**APT GPG key conflict.** `sudo apt update` failed with
-`E: Conflicting values set for option Signed-By regarding source http://packages.ros.org/ros2/ubuntu/ jammy...`.
-An old ROS `.list` file with an inline key conflicted with the keyring method. Fix:
-```bash
-sudo rm -f /etc/apt/sources.list.d/ros*.list
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-sudo apt update
-```
-
-**"Dirty build" linker errors** (`undefined reference to dds::xrce::...`) when building the agent.
-An earlier build ran without `source /opt/ros/humble/setup.bash` and left broken artifacts. Fix: wipe and rebuild
-(`scripts/build.sh` sources ROS itself):
-```bash
-cd ~/amr/microros_ws && rm -rf build/ install/ log/
-~/amr/scripts/build.sh agent
-```
-
-**`Waiting for at least 1 matching subscription(s)...`** when publishing to the ESP32.
-The agent had been stopped, so the ESP32 had no bridge to ROS. Keep the agent running, since `amr_bringup.sh` does this.
-With the old test sketch the ESP32 had to be reset (`RST`) after the agent restarted; the current firmware reconnects by itself.
+- **Wi-Fi firmware:** this is the code in use on the robot.
+- **Serial firmware:** derived from the Wi-Fi firmware. Its control code is identical, and it has been compile-checked and simulated against stand-in versions of the ESP32 and micro-ROS libraries. **It has not yet been run on the real hardware.** Test it with the wheels off the ground first.

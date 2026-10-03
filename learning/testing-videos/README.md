@@ -34,6 +34,5 @@ outcome. Dates, setups and outcomes come from the team's [project log](../projec
 | File | What |
 |---|---|
 | ![whiteboard](media/2026-09-23_whiteboard-architecture.jpg) | Whiteboard architecture from the 23 Sep kickoff: SLAM Toolbox (RPLIDAR driver → `/scan`, fake `/odom`, TFs), Controller & HW interface (`cmd_vel` → diff controller → left/right wheel velocity → HW interface), Communication (micro-ROS agent, ESP32 ⇄ Pi), Nav2 |
-| ![motor product page](media/2026-09-23_motor-product-page.jpg) | Motor product page: planetary gear DC motor 12 V, 262 RPM, 45 N·cm, PG36M555-19.2K with encoder ME-37, 7 PPR |
 
 To add a test: put the file in `media/` as `YYYY-MM-DD_short-description.ext` (compress videos to H.264 first) and add a row.

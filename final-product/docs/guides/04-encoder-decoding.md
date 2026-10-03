@@ -4,7 +4,9 @@ How the quadrature encoder signals become wheel angle (rad) and speed (rad/s) on
 the Pi as `/encoder_telemetry`.
 
 Code: `initWheel()`, `updateWheel()` and `publishTelemetry()` in
-[`firmware/esp32/amr_esp32/amr_esp32.ino`](../../firmware/esp32/amr_esp32/amr_esp32.ino).
+[`firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino`](../../firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino).
+
+> The ESP32 hardware team's own documentation in [`firmware/esp32/`](../../firmware/esp32/README.md) (README + `docs/01–05`) is the authoritative source for the ESP32 side; this guide explains how it fits the rest of the stack.
 
 ---
 
@@ -40,14 +42,15 @@ enc->clearCount();                                          // start at 0
 
 | Wheel | Motor / gearbox | `CPR` (counts per **wheel** revolution, 4×) | Implied counts per motor-shaft revolution |
 |---|---|---|---|
-| Left | 26.9:1 (a different motor from the right one) | 752.6 | 752.6 / 26.9 ≈ 28 |
-| Right | PG36M555-19.2K, 19.2:1 (firmware comment: 19.1:1) | 536.1 | 536.1 / 19.1 ≈ 28 |
+| Left | ≈ 26.9 : 1 | 752.6 (measured) | 752.6 / 26.9 ≈ 28 |
+| Right | ≈ 19.1 : 1 | 536.1 (measured) | 536.1 / 19.1 ≈ 28 |
 
-The encoder is the **ME-37, 7 PPR** (7 pulses per channel per motor-shaft revolution, from the motor's product page),
-so 4× decoding gives 7 × 4 = **28 counts per motor revolution**, multiplied by the gear ratio for a wheel revolution:
-28 × 19.2 = 537.6 (nominal) vs 536.1 used; 28 × 26.9 = 753.2 vs 752.6 used. The used values were calibrated per motor
-(the project log notes that the counts differed between motors). To re-measure, turn the wheel exactly 10 revolutions by
-hand and divide the count change by 10.
+Both motors are **Pro-Range 24 V planetary gear DC motors with Hall quadrature encoders**, with different gearboxes
+(firmware README, *Hardware*). The CPR values were measured with the bench tool
+[`tools/02_two_motor_encoder_test`](../../firmware/esp32/tools/02_two_motor_encoder_test/) (procedure in
+[`docs/04_bringup_procedure.md`](../../firmware/esp32/docs/04_bringup_procedure.md); theory in
+[`docs/01_encoder_theory.md`](../../firmware/esp32/docs/01_encoder_theory.md)). The "≈ 28 counts per motor
+revolution" column is only CPR ÷ gear ratio. Encoder VCC goes to the ESP32's **3V3** pin: ESP32 inputs aren't 5 V tolerant.
 
 ## 4. From counts to position and velocity (every 20 ms)
 
@@ -67,7 +70,7 @@ w.pos  = TWO_PI * (double)c / (double)w.cpr;                   // cumulative whe
   between multiples of this step, which is why it's filtered.
 - **Filter:** first-order IIR (exponential moving average) with α = 0.3 at 50 Hz. Time constant
   τ = −dt / ln(1−α) ≈ 0.020 / 0.357 ≈ **56 ms**. Smooth enough for the PI loop, fast enough to follow the 40 rad/s² ramp.
-- **Direction flags:** on the left wheel both the encoder and the motor are inverted (`L_ENC_INVERT = L_MOTOR_INVERT = true`), as is typical when the two motors are mounted facing opposite directions.
+- **Direction flags:** on the **right** wheel both the encoder and the motor are inverted (`R_ENC_INVERT = R_MOTOR_INVERT = true`; left `false`), so that positive means robot forward on both sides.
 
 `meas` feeds the PI controller; `pos` and `meas` are copied to the shared struct for telemetry.
 
@@ -77,15 +80,15 @@ w.pos  = TWO_PI * (double)c / (double)w.cpr;                   // cumulative whe
 
 | Field | Value |
 |---|---|
-| `header.stamp` | Pi-synchronized epoch time (`rmw_uros_epoch_nanos()`), or `millis()` if sync failed |
+| `header.stamp` | Pi epoch time of the moment the encoders were **read** in `controlTask` (µs timer + clock offset, see [guide 2 §6](02-micro-ros-communication.md)); time since ESP32 boot if the clock has never synced |
 | `header.frame_id` | empty |
 | `name` | `["left_wheel", "right_wheel"]` |
 | `position` | `[posL, posR]` rad, cumulative since boot |
 | `velocity` | `[velL, velR]` rad/s, filtered |
 | `effort` | empty |
 
-Published best effort on `/encoder_telemetry`. The stamp is taken when publishing, up to 20 ms after the control task
-measured the values.
+Published best effort on `/encoder_telemetry`. The stamp is the time the control task read the
+encoders (`sampleUs`), not the publish time, so it marks exactly when the positions were measured.
 
 ## 6. How the Pi uses it
 

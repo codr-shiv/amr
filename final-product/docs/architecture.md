@@ -33,7 +33,7 @@ flowchart LR
     ML["Left motor + encoder"]
     MR["Right motor + encoder"]
 
-    RVIZ <-->|"ROS 2 DDS over Wi-Fi<br/>(ROS_DOMAIN_ID 30)"| NAV
+    RVIZ <-->|"ROS 2 DDS over Wi-Fi<br/>(ROS_DOMAIN_ID 0)"| NAV
     LIDAR -->|"USB serial /dev/ttyUSB0"| LD
     NAV --> DD
     DD <--> AG
@@ -181,7 +181,7 @@ flowchart LR
 `smoother_server` (simple smoother) is also started, but Humble's default behavior tree doesn't call it;
 `waypoint_follower` handles multi-goal missions.
 
-### 5.3 ESP32 firmware (`firmware/esp32/amr_esp32/amr_esp32.ino`)
+### 5.3 ESP32 firmware (`firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino`)
 
 ```mermaid
 flowchart LR
@@ -255,7 +255,7 @@ flowchart LR
     AW --> OUT["PWM (0..1023) + DIR pin"]
 ```
 
-Gains, CPR and invert flags per wheel: [firmware README §3](../firmware/esp32/README.md#3-configuration-top-of-the-sketch).
+Gains, CPR and invert flags per wheel: [firmware README, Current parameters](../firmware/esp32/README.md#current-parameters).
 
 ---
 

@@ -1,5 +1,5 @@
 // =====================================================================
-//  AMR ESP32 FIRMWARE
+//  AMR ESP32 FIRMWARE  -  Wi-Fi (UDP) transport
 //  Per-wheel velocity PID + quadrature encoders + micro-ROS over Wi-Fi
 // ---------------------------------------------------------------------
 //  ROS 2 interface (unchanged from the micro-ROS test code):
@@ -9,7 +9,9 @@
 //           name     = ["left_wheel", "right_wheel"]
 //           position = [left angle (rad), right angle (rad)]    cumulative
 //           velocity = [left (rad/s),    right (rad/s)]         filtered
-//           header.stamp = Pi time (synchronised with the agent)
+//           header.stamp = Pi time (synchronised with the agent) of the
+//                          moment the encoders were READ in controlTask,
+//                          with microsecond resolution (see CLOCK SYNC)
 //
 //  Architecture:
 //    * controlTask (FreeRTOS, core 1, 50 Hz fixed): encoders -> PID -> PWM.
@@ -51,12 +53,12 @@
 
 #include <ESP32Encoder.h>
 #include "esp_arduino_version.h"
+#include "esp_timer.h"          // esp_timer_get_time(): 64-bit microseconds since boot
 
 // ===================== Wi-Fi & AGENT CONFIGURATION =====================
-#define SSID_NAME       "YOUR_WIFI_SSID"        // CHANGE BEFORE COMPILING
-#define SSID_PASSWORD   "YOUR_WIFI_PASSWORD"    // CHANGE BEFORE COMPILING
-#define AGENT_IP        "192.168.0.100"         // CHANGE: the Pi's current IP (hostname -I)
-#define AGENT_PORT      8888
+// SSID_NAME, SSID_PASSWORD, AGENT_IP and AGENT_PORT live in secrets.h, which
+// is NOT committed to git. Copy secrets.example.h to secrets.h and fill it in.
+#include "secrets.h"
 
 // ============================ ROS NAMES ================================
 const char *NODE_NAME       = "esp32_wifi_wheel_node";
@@ -67,12 +69,13 @@ const char *TOPIC_TELEMETRY = "encoder_telemetry";
 const uint32_t PUB_INTERVAL_MS = 50;    // telemetry at 20 Hz
 const uint32_t CMD_TIMEOUT_MS  = 500;   // stop if no velocity command for this long (0 = never)
 const bool     DEBUG_ROS_RX    = false; // true = print every received velocity (slows loop)
+const uint32_t RESYNC_MS       = 60000; // re-sync clock with the agent this often (cancels crystal drift)
 
 // ======================= LEFT = MOTOR 1 (26.9:1) =======================
 const int   L_ENC_A = 32, L_ENC_B = 33, L_PWM = 18, L_DIR = 19, L_CH = 0;
 const float L_CPR          = 752.6;
-const bool  L_ENC_INVERT   = true;
-const bool  L_MOTOR_INVERT = true;
+const bool  L_ENC_INVERT   = false;
+const bool  L_MOTOR_INVERT = false;
 const float L_KFF       = 49.72;
 const float L_PWM_MIN   = 11.8;
 const float L_KP        = 30.0;
@@ -82,8 +85,8 @@ const float L_MAX_SPEED = 17.00;
 // ======================= RIGHT = MOTOR 2 (19.1:1) ======================
 const int   R_ENC_A = 25, R_ENC_B = 26, R_PWM = 23, R_DIR = 22, R_CH = 1;
 const float R_CPR          = 536.1;
-const bool  R_ENC_INVERT   = false;
-const bool  R_MOTOR_INVERT = false;
+const bool  R_ENC_INVERT   = true;
+const bool  R_MOTOR_INVERT = true;
 const float R_KFF       = 43.54;
 const float R_PWM_MIN   = 12.0;
 const float R_KP        = 25.0;
@@ -122,6 +125,7 @@ struct Shared {
   float    tgtL, tgtR;           // target after limits
   float    refL, refR;           // ramped setpoint
   int      pwmL, pwmR;           // signed PWM output
+  int64_t  sampleUs;             // esp_timer time (us) when posL/posR were read
 };
 
 Shared       sh;
@@ -280,11 +284,13 @@ void controlStep(float dt) {
   }
 
   // 3. run both wheels
+  int64_t sampleUs = esp_timer_get_time();   // time stamp of this encoder reading
   updateWheel(L, dt, openLoop, (int)c.serL);
   updateWheel(R, dt, openLoop, (int)c.serR);
 
   // 4. hand the results to loop()
   LOCK();
+  sh.sampleUs = sampleUs;
   sh.posL = L.pos;    sh.posR = R.pos;
   sh.velL = L.meas;   sh.velR = R.meas;
   sh.tgtL = L.target; sh.tgtR = R.target;
@@ -334,6 +340,40 @@ double                    jointVel[2];
 
 enum AgentState { WAITING_AGENT, AGENT_AVAILABLE, AGENT_CONNECTED, AGENT_DISCONNECTED };
 AgentState agentState = WAITING_AGENT;
+
+// =====================================================================
+//                            CLOCK SYNC
+// ---------------------------------------------------------------------
+//  rmw_uros_epoch_nanos() on this board only advances in whole seconds
+//  (observed: header.stamp.nanosec never changes). So it is used only
+//  right after a sync, to learn the offset between the agent's clock and
+//  the ESP32's own 64-bit microsecond timer:
+//      agent_time_ns = esp_timer_get_time() * 1000 + clockOffsetNs
+//  Two consecutive syncs must agree (within 20 ms) before the offset is
+//  accepted; this rejects the case where the 1 s clock ticks during a sync.
+// =====================================================================
+int64_t  clockOffsetNs = 0;
+bool     clockSynced   = false;
+uint32_t lastSyncMs    = 0;
+int64_t  lastStampNs   = 0;      // keeps published stamps strictly increasing
+
+bool syncClock() {
+  lastSyncMs = millis();
+  int64_t prevOff = 0;
+  bool    havePrev = false;
+  for (int i = 0; i < 4; i++) {
+    if (rmw_uros_sync_session(100) != RMW_RET_OK || !rmw_uros_epoch_synchronized()) continue;
+    int64_t us  = esp_timer_get_time();
+    int64_t off = rmw_uros_epoch_nanos() - us * 1000LL;
+    if (havePrev && llabs(off - prevOff) < 20000000LL) {
+      clockOffsetNs = off / 2 + prevOff / 2;
+      clockSynced   = true;
+      return true;
+    }
+    prevOff = off; havePrev = true;
+  }
+  return false;   // keep the previous offset (if any)
+}
 
 void initTelemetryMsg() {
   jointNames[0].data = nameLeft;  jointNames[0].size = strlen(nameLeft);  jointNames[0].capacity = sizeof(nameLeft);
@@ -390,7 +430,9 @@ bool createEntities() {
   if (rclc_executor_add_subscription(&executor, &sub_right_vel, &msg_right_vel,
         &right_vel_callback, ON_NEW_DATA) != RCL_RET_OK) return false;
 
-  rmw_uros_sync_session(1000);   // align ESP32 clock with the Pi for timestamps
+  // align ESP32 clock with the Pi for timestamps (failure is not fatal: retried later)
+  if (syncClock()) Serial.println("# clock synced with agent");
+  else             Serial.println("# clock sync FAILED - will retry");
   return true;
 }
 
@@ -417,22 +459,24 @@ void setAgentConnected(bool connected) {
 
 void publishTelemetry() {
   LOCK();
-  double pl = sh.posL, pr = sh.posR;
-  float  vl = sh.velL, vr = sh.velR;
+  double  pl = sh.posL, pr = sh.posR;
+  float   vl = sh.velL, vr = sh.velR;
+  int64_t su = sh.sampleUs;          // when these positions were measured
   UNLOCK();
 
   jointPos[0] = pl;  jointPos[1] = pr;
   jointVel[0] = vl;  jointVel[1] = vr;
 
-  if (rmw_uros_epoch_synchronized()) {
-    int64_t ns = rmw_uros_epoch_nanos();
-    msg_encoder.header.stamp.sec     = (int32_t)(ns / 1000000000LL);
-    msg_encoder.header.stamp.nanosec = (uint32_t)(ns % 1000000000LL);
-  } else {
-    uint32_t ms = millis();
-    msg_encoder.header.stamp.sec     = ms / 1000;
-    msg_encoder.header.stamp.nanosec = (ms % 1000) * 1000000UL;
+  // synced: Pi epoch time of the sample; not synced: time since ESP32 boot
+  int64_t ns = su * 1000LL + (clockSynced ? clockOffsetNs : 0);
+  if (clockSynced) {
+    // never go backwards after a small re-sync correction; a big jump
+    // (> 1 s, e.g. the Pi's clock was reset) is accepted as-is
+    if (ns <= lastStampNs && lastStampNs - ns < 1000000000LL) ns = lastStampNs + 1;
+    lastStampNs = ns;
   }
+  msg_encoder.header.stamp.sec     = (int32_t)(ns / 1000000000LL);
+  msg_encoder.header.stamp.nanosec = (uint32_t)(ns % 1000000000LL);
   (void)rcl_publish(&pub_encoder, &msg_encoder, NULL);
 }
 
@@ -469,6 +513,8 @@ void microRosStep() {
         lastPubMs = now;
         publishTelemetry();
       }
+      // periodic re-sync (every RESYNC_MS; every 5 s while never synced)
+      if (now - lastSyncMs >= (clockSynced ? RESYNC_MS : 5000)) syncClock();
       break;
 
     case AGENT_DISCONNECTED:

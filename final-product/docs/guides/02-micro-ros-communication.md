@@ -3,9 +3,11 @@
 How the ESP32 becomes part of the ROS 2 graph: transport, the agent, entities, QoS, message memory,
 time synchronization, reconnection, and how to debug it.
 
-Code: [`firmware/esp32/amr_esp32/amr_esp32.ino`](../../firmware/esp32/amr_esp32/amr_esp32.ino) (micro-ROS layer),
+Code: [`firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino`](../../firmware/esp32/firmware/amr_esp32_wifi/amr_esp32_wifi.ino) (micro-ROS layer),
 [`microros_ws/`](../../microros_ws/) (agent), [`amr_bringup.sh`](../../amr_bringup.sh) (starts the agent),
 [`scripts/build.sh`](../../scripts/build.sh) (builds it).
+
+> The ESP32 hardware team's own documentation in [`firmware/esp32/`](../../firmware/esp32/README.md) (README + `docs/01–05`) is the authoritative source for the ESP32 side; this guide explains how it fits the rest of the stack.
 
 ---
 
@@ -49,12 +51,20 @@ not by the agent's `ROS_DOMAIN_ID` (see §8).
 
 ## 3. Transport setup (ESP32 side)
 
+The sketch does `#include "secrets.h"`. Copy `secrets.example.h` to `secrets.h` (same folder, ignored by git) and fill it in:
+
 ```cpp
-#define SSID_NAME       "YOUR_WIFI_SSID"        // CHANGE BEFORE COMPILING
-#define SSID_PASSWORD   "YOUR_WIFI_PASSWORD"    // CHANGE BEFORE COMPILING
-#define AGENT_IP        "192.168.0.100"         // CHANGE: the Pi's current IP (hostname -I)
-#define AGENT_PORT      8888
+#define SSID_NAME       "your-wifi-name"
+#define SSID_PASSWORD   "your-wifi-password"
+#define AGENT_IP        "192.168.0.xxx"     // Raspberry Pi IP (where the micro-ROS agent runs)
+#define AGENT_PORT      8888                // micro-ROS agent UDP port
 ```
+
+The Pi needs a **static IP** (or a DHCP reservation on the router) so `AGENT_IP` stays valid; check it with
+`hostname -I`. A wired alternative, `firmware/amr_esp32_serial/` (agent: `serial --dev /dev/ttyUSB0 -b 115200`), exists
+but **hasn't been run on the real hardware** yet. If you use it, note that the RPLIDAR is also on `/dev/ttyUSB0`: give
+the ESP32 its own device name (`/dev/serial/by-id/...`) in the agent command, and change `amr_bringup.sh` step 1 to the
+serial agent ([`docs/03_microros_interface.md` §7](../../firmware/esp32/docs/03_microros_interface.md)).
 
 In `setup()`:
 1. `WiFi.begin(SSID_NAME, SSID_PASSWORD)` and wait until connected (prints the ESP32's IP).
@@ -117,7 +127,7 @@ stateDiagram-v2
 ```
 
 - **createEntities():** default allocator → `rclc_support_init` → node → 2 subscriptions → best-effort publisher →
-  executor + 2 subscriptions → `rmw_uros_sync_session(1000)` (time sync, §6). Any failure returns false.
+  executor + 2 subscriptions → `syncClock()` (time sync, §6; a failed sync isn't fatal and is retried). Any other failure returns false.
 - **destroyEntities():** sets the session-destroy timeout to 0 (so it doesn't block waiting for a dead agent),
   then finalizes publisher, subscriptions, executor, node, support.
 - **setAgentConnected(false)** also zeroes the stored ROS targets, so the robot never resumes an old command after a reconnect.
@@ -130,16 +140,23 @@ Serial messages: `# micro-ROS: CONNECTED to agent`, `# micro-ROS: agent LOST - m
 `amr_diff_drive` uses the telemetry stamp to know *when* a sample was measured (latency compensation), so the stamp
 must be on the **Pi's clock**.
 
-1. On every connection: `rmw_uros_sync_session(1000)` exchanges time with the agent (up to 1 s) and stores the offset.
-2. In `publishTelemetry()`:
-   - if `rmw_uros_epoch_synchronized()`: `ns = rmw_uros_epoch_nanos()` → `header.stamp.sec = ns / 1e9`, `nanosec = ns % 1e9` (Pi epoch time);
-   - otherwise: `millis()` since boot (a 1970-era stamp), which the Pi side rejects (offset > 0.5 s) and falls back to receive time.
-3. Position/velocity are copied from the shared struct under the spinlock just before publishing (a snapshot at most one
-   control period, 20 ms, old).
+On this board `rmw_uros_epoch_nanos()` only advances in **whole seconds** (`nanosec` never changes), so it can't be
+used directly as a stamp. The firmware therefore measures a clock offset once and uses the ESP32's own 64-bit
+microsecond timer:
+
+1. **`syncClock()`** (on connect, then every `RESYNC_MS` = 60 s; every 5 s while never synced): up to 4 ×
+   `rmw_uros_sync_session(100)`; each gives `offset = rmw_uros_epoch_nanos() − esp_timer_get_time()·1000`. Two consecutive
+   offsets must agree within 20 ms (rejects a sync during which the 1 s clock ticked); the accepted offset is their mean.
+   A failed sync keeps the previous offset.
+2. **Sample time:** the control task records `sampleUs = esp_timer_get_time()` at the moment it reads the encoders.
+3. **`publishTelemetry()`:** `stamp = sampleUs·1000 + clockOffsetNs` (Pi epoch time of the *encoder read*, µs resolution).
+   Stamps are kept strictly increasing after small re-sync corrections; a jump > 1 s (e.g. the Pi's clock was reset) is
+   accepted. If the clock never synced, the stamp is time since ESP32 boot, which `amr_diff_drive` rejects
+   (offset > 0.5 s) and replaces with the receive time.
 
 Notes:
-- Sync happens only at connection time. The ESP32 crystal drifts (tens of ppm → up to ~0.2 s per hour); after very long
-  sessions the offset check (`max_stamp_offset: 0.5` s on the Pi) may start rejecting stamps. The Pi logs it; a reconnect re-syncs.
+- The 60 s re-sync cancels crystal drift, so `max_stamp_offset: 0.5` s on the Pi isn't exceeded in long sessions.
+- Details: [`docs/03_microros_interface.md` §5](../../firmware/esp32/docs/03_microros_interface.md).
 - The Pi's own clock should be NTP-synced (`chronyc tracking`); don't change the system time while running.
 - Measured on the robot (28 Sep 2026 bringup log): encoder latency over 139 ten-second windows: means 15–242 ms (median 81 ms), single samples 4.6–410 ms, **0 stamps rejected**. Latency above the 0.2 s prediction limit isn't compensated.
 
@@ -152,15 +169,15 @@ Notes:
 
 The ESP32 needs commands at ≥ 5 Hz (`CMD_TIMEOUT_MS = 500`); 50 Hz leaves a big margin for lost packets.
 
-## 8. ⚠️ ROS domain ID
+## 8. ROS domain ID (0)
 
 `createEntities()` calls `rclc_support_init(&support, 0, NULL, &allocator)` with default init options, i.e. it does **not**
 set a domain ID, so the ESP32's entities are created in **domain 0** (the micro-ROS default).
 The agent creates them in whatever domain the client asks for, independent of the agent's own `ROS_DOMAIN_ID`.
 
-The main README recommends `ROS_DOMAIN_ID=30` on the Pi and the laptop. If the Pi's nodes are on domain 30 and the ESP32 is
-on domain 0, `amr_diff_drive` will **not** see `/encoder_telemetry` and the ESP32 won't see `/left_vel` (bringup prints
-`waiting for /encoder_telemetry ... NOT READY`). Check on the first run:
+So the **whole robot uses domain 0**: `amr_bringup.sh` exports `ROS_DOMAIN_ID=0` (and warns if your shell had another
+value), and the README tells you to set `export ROS_DOMAIN_ID=0` on the Pi and the laptop. If a shell is on a different
+domain, `ros2 topic list` there won't show `/encoder_telemetry` and the ESP32 won't see `/left_vel`. Check:
 
 ```bash
 echo $ROS_DOMAIN_ID
@@ -168,15 +185,14 @@ ros2 topic list | grep encoder          # visible in your domain?
 ROS_DOMAIN_ID=0 ros2 topic list | grep encoder   # or only in domain 0?
 ```
 
-Two ways to make them match:
-- **Firmware** (recommended if the team uses 30): replace the `rclc_support_init` line with
-  ```cpp
-  rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
-  if (rcl_init_options_init(&init_options, allocator) != RCL_RET_OK) return false;
-  if (rcl_init_options_set_domain_id(&init_options, 30) != RCL_RET_OK) return false;
-  if (rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator) != RCL_RET_OK) return false;
-  ```
-- **Pi**: leave `ROS_DOMAIN_ID` unset (domain 0) on the Pi and the laptop.
+If you ever need another domain, the firmware must set it too (replace the `rclc_support_init` line):
+```cpp
+rcl_init_options_t init_options = rcl_get_zero_initialized_init_options();
+if (rcl_init_options_init(&init_options, allocator) != RCL_RET_OK) return false;
+if (rcl_init_options_set_domain_id(&init_options, <id>) != RCL_RET_OK) return false;
+if (rclc_support_init_with_options(&support, 0, NULL, &init_options, &allocator) != RCL_RET_OK) return false;
+```
+and change `amr_bringup.sh` and both `~/.bashrc` files to the same value.
 
 ## 9. Observed link stability
 
@@ -202,4 +218,6 @@ Things to check if it happens again (hypotheses, not confirmed causes):
 | Agent log shows sessions but no `/encoder_telemetry` on the Pi | domain mismatch (§8); `ros2 daemon stop` and retry |
 | `ros2 topic pub /left_vel ...` has no effect | ESP32 needs ≥ 5 Hz (`-r 10`); `amr_diff_drive` also publishes these topics |
 | `Encoder stamp not used (stamp offset ...)` on the Pi | time sync failed; reconnect (restart the agent) and check `chronyc tracking` |
+| `sudo apt update`: `Conflicting values set for option Signed-By ... packages.ros.org` | old ROS `.list` file with an inline key: `sudo rm -f /etc/apt/sources.list.d/ros*.list`, recreate `ros2.list` with `signed-by=/usr/share/keyrings/ros-archive-keyring.gpg`, `sudo apt update` |
+| `ros2 topic pub` waits with `Waiting for at least 1 matching subscription(s)...` | agent not running (the ESP32 has no bridge); start it and keep it running. The firmware reconnects by itself |
 | Build fails with `undefined reference to dds::xrce::...` | stale build: `rm -rf microros_ws/build microros_ws/install microros_ws/log` then `scripts/build.sh agent` |

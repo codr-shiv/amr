@@ -21,7 +21,7 @@ Robotics Society, IIT Jodhpur · Core Team 2026–27
 |---|---|
 | ESP32 + cable | 1 |
 | Raspberry Pi + adapter + LAN cable | 1 |
-| Planetary geared DC motors with encoders (12V, 262 RPM, 45 N-cm, PG36M555-19.2K, encoder ME-37 7PPR) + connecting wires | 3 |
+| Pro-Range 24 V planetary gear DC motors with Hall quadrature encoders (left ≈ 26.9 : 1, right ≈ 19.1 : 1) + connecting wires | 2 |
 | Cytron motor drivers | 3 |
 | RPLidar | 1 |
 | DC power supply | 1 |
@@ -157,7 +157,6 @@ Setup for everyone: flash Ubuntu 22.04, install ROS 2 Humble.
 
 | File | Date | Content |
 |---|---|---|
-| [2026-09-23_motor-product-page.jpg](testing-videos/media/2026-09-23_motor-product-page.jpg) | 23 Sep | Motor product page (PG36M555 with encoder) |
 | [2026-09-23_whiteboard-architecture.jpg](testing-videos/media/2026-09-23_whiteboard-architecture.jpg) | 23 Sep | Whiteboard architecture: controller & HW interface, communication, Nav2, SLAM |
 | [2026-09-25_pid-velocity-plots.mp4](testing-videos/media/2026-09-25_pid-velocity-plots.mp4) | 25 Sep | Wheel velocity / PID plots during integration |
 | [2026-09-25_motor-test-rig.mp4](testing-videos/media/2026-09-25_motor-test-rig.mp4) | 25 Sep | Motor + wheel test rig |

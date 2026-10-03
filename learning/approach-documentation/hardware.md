@@ -44,7 +44,7 @@ choice (e.g. current rating, heat, voltage drop, availability) and the model.
 |---|---|
 | Problem it solves | Real-time wheel control (encoder counting, 50 Hz PID) that a Linux Pi can't do reliably, and a bridge to ROS 2 |
 | Pros | Hardware quadrature counters (`ESP32Encoder`), two cores (control loop on its own core, never blocked by Wi-Fi), built-in Wi-Fi, supported by micro-ROS |
-| Issues encountered | Wi-Fi latency and jitter on encoder data: 10-s window means of 15–242 ms (median 81 ms), single samples up to 410 ms (`amr_logs/diff_drive.log`), which led to timestamped telemetry and pose prediction on the Pi; the clock must be synced with the Pi for the stamps to be usable; the micro-ROS agent must be running or the ESP32 loses its link (the final firmware reconnects automatically); setup problems are listed in the [firmware README §8](../../final-product/firmware/esp32/README.md) |
+| Issues encountered | Wi-Fi latency and jitter on encoder data: 10-s window means of 15–242 ms (median 81 ms), single samples up to 410 ms (`amr_logs/diff_drive.log`), which led to timestamped telemetry and pose prediction on the Pi; the clock must be synced with the Pi for the stamps to be usable; the micro-ROS agent must be running or the ESP32 loses its link (the final firmware reconnects automatically); setup problems are listed in the [ESP32 troubleshooting](../../final-product/firmware/esp32/docs/05_troubleshooting.md) |
 | Alternatives | TODO (team): was an Arduino / STM32 or a wired (serial) link considered? |
 
 ---
@@ -64,11 +64,10 @@ choice (e.g. current rating, heat, voltage drop, availability) and the model.
 
 | | |
 |---|---|
-| Planned | 3 × planetary geared DC motors PG36M555-19.2K (12 V, 262 RPM, 45 N·cm) with ME-37 7-PPR encoders (component list, 23 Sep) |
-| Final | Right: PG36M555-19.2K (536.1 counts per wheel revolution). Left: a motor with a **26.9:1** gearbox (752.6 counts). 4× decoding |
+| Final | 2 × Pro-Range 24 V planetary gear DC motors with Hall quadrature encoders (hardware team): left ≈ 26.9 : 1 (752.6 counts per wheel revolution), right ≈ 19.1 : 1 (536.1 counts). 4× decoding |
 | Issues encountered | Only one motor was tested on day 1 (24 Sep). Encoder calibration done on one motor gave values that didn't carry over to the others, so every motor was calibrated separately (24 Sep). After PID worked, the motor deadband under load still needed tuning (25 Sep). The two gear ratios differ, so each wheel has its own CPR, feed-forward and PI gains, and both are limited to 17 rad/s so they reach the same top speed |
-| Pros | Planetary gearbox with high torque (45 N·cm); built-in encoder enables closed-loop speed control and wheel odometry |
-| Open | TODO (team): why the left motor differs from the planned PG36M555-19.2K, and its model |
+| Pros | Planetary gearbox; built-in Hall encoder enables closed-loop speed control and wheel odometry |
+| Open | TODO (team): why the two gearboxes differ |
 
 ---
 
@@ -89,7 +88,7 @@ choice (e.g. current rating, heat, voltage drop, availability) and the model.
 | | |
 |---|---|
 | Bench testing | DC bench power supply (component list, 23 Sep) |
-| On the robot | onboard battery; TODO (team): chemistry, voltage, capacity, how the 12 V motors, the Pi and the ESP32 are supplied |
+| On the robot | onboard battery; TODO (team): chemistry, voltage, capacity, how the 24 V motors, the Pi and the ESP32 are supplied |
 
 ---
 

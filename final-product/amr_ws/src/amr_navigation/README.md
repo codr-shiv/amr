@@ -185,7 +185,7 @@ faces. Watch the green particle cloud shrink as the robot moves.
 
 The laptop and Pi must be on the same network with the same `ROS_DOMAIN_ID`:
 ```bash
-export ROS_DOMAIN_ID=<same number as the Pi>
+export ROS_DOMAIN_ID=0   # same as the Pi and the ESP32
 ros2 launch nav2_bringup rviz_launch.py
 ```
 Useful displays: Map, `/local_costmap/costmap`, `/global_costmap/costmap`, `/plan`,

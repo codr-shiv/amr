@@ -49,7 +49,13 @@ if [ "$MODE" = "nav" ] && [ ! -f "$MAP" ]; then
   echo "!!! Map not found: $MAP  (edit MAP at the top of this script, or run: MAP=/abs/path.yaml $0)"
   exit 1
 fi
-echo "ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-<unset = 0>}  ROS_LOCALHOST_ONLY=${ROS_LOCALHOST_ONLY:-<unset = 0>}"
+# The ESP32 firmware creates its micro-ROS entities in ROS domain 0, so the whole robot runs in domain 0.
+if [ -n "$ROS_DOMAIN_ID" ] && [ "$ROS_DOMAIN_ID" != "0" ]; then
+  echo "!!! ROS_DOMAIN_ID=$ROS_DOMAIN_ID in this shell; using 0 (the ESP32's domain). Set it to 0 on the laptop too."
+fi
+export ROS_DOMAIN_ID=0
+export ROS_LOCALHOST_ONLY=0
+echo "ROS_DOMAIN_ID=$ROS_DOMAIN_ID  ROS_LOCALHOST_ONLY=$ROS_LOCALHOST_ONLY"
 mkdir -p "$LOG_DIR"
 
 PIDS=()
